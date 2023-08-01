@@ -1,8 +1,9 @@
-datasource:
-  driver-class-name: com.mysql.cj.jdbc.Driver
-  url: jdbc:mysql://52.79.65.54:3306/board?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-  username: goboard
-  password: Gogoboard1!
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://52.79.65.54:3306/board?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: goboard
+    password: Gogoboard1!
 
 # ?? ?? ??
 #  server:
