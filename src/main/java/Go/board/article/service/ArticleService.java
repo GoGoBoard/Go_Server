@@ -59,7 +59,8 @@ public class ArticleService {
         Page<ArticleEntity> articleEntities =
                 articleRepository.findAll(PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "postId")));
         Page<ArticleDTO> articleDTOS =
-                articleEntities.map(articleEntity -> new ArticleDTO(articleEntity.getMemberId(), articleEntity.getTitle(), articleEntity.getContent(), articleEntity.getWriteTime()));
+                articleEntities.map(articleEntity -> ArticleDTO.toarticleDTO(articleEntity
+                        ));
         return articleDTOS;
     }
 }
