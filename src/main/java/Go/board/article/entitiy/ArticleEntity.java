@@ -14,7 +14,6 @@ public class ArticleEntity extends TimeEntity {
     @Id //pk컬럼 지정
     @GeneratedValue(strategy = GenerationType.IDENTITY)//auto_increment
     private int postId;
-
     private int memberId;
     private String title;
     private String content;

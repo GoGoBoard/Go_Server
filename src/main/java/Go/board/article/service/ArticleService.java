@@ -21,7 +21,6 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
 
     public void save(ArticleDTO articleDTO) {
-        System.out.println(articleDTO);
         ArticleEntity articleEntity = ArticleEntity.toSaveEntity(articleDTO);
         articleRepository.save(articleEntity);
     }
