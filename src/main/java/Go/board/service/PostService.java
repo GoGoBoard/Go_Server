@@ -66,4 +66,24 @@ public class PostService {
         return null;
     }
 
+    public PostDTO partialUpdatePost(int postId, PostDTO updatedFieldsDTO) {
+        Optional<Post> optionalPost = postRepository.findById(postId);
+        if (optionalPost.isPresent()) {
+            Post existingPost = optionalPost.get();
+            if (updatedFieldsDTO.getTitle() != null) {
+                existingPost.setTitle(updatedFieldsDTO.getTitle());
+            }
+            if (updatedFieldsDTO.getContent() != null) {
+                existingPost.setContent(updatedFieldsDTO.getContent());
+            }
+            if (updatedFieldsDTO.getWriteTime() != null) {
+                existingPost.setWriteTime(updatedFieldsDTO.getWriteTime());
+            }
+            // Save the updated post
+            Post updatedPost = postRepository.save(existingPost);
+            return modelMapper.map(updatedPost, PostDTO.class); // Map entity to DTO
+        }
+        return null;
+    }
+
 }

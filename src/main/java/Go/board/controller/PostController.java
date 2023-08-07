@@ -52,4 +52,10 @@ public class PostController {
         PostDTO postDTO = postService.updatePost(articleId, updatedPostDTO);
         return postDTO != null ? ResponseEntity.ok(postDTO) : ResponseEntity.notFound().build();
     }
+
+    @PatchMapping("/{articleId}")
+    public ResponseEntity<PostDTO> partialUpdatePost(@PathVariable int articleId, @RequestBody PostDTO updatedFieldsDTO) {
+        PostDTO postDTO = postService.partialUpdatePost(articleId, updatedFieldsDTO);
+        return postDTO != null ? ResponseEntity.ok(postDTO) : ResponseEntity.notFound().build();
+    }
 }
