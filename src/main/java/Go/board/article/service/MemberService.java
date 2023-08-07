@@ -12,7 +12,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
-    public MemberDTO findByloginId(String loginId) {
+    public MemberDTO login(String loginId) {
         //db에서  로그인 id를 찾고
         MemberEntity findMemberEntity = memberRepository.findByLoginId(loginId);
         //dto로 컨버팅한 것을 return
@@ -23,11 +23,10 @@ public class MemberService {
     }
 
     public boolean registerMember(MemberDTO memberDTO) {
-        MemberEntity findMember = memberRepository.findByLoginId(memberDTO.getLoginId());
-        if (findMember != null) {
+        MemberEntity findMemberEntity = memberRepository.findByLoginId(memberDTO.getLoginId());
+        if (findMemberEntity != null) {
             return false;
         } else {
-            System.out.println(memberDTO);
             memberRepository.save(MemberEntity.toSaveMember(memberDTO));
             return true;
         }

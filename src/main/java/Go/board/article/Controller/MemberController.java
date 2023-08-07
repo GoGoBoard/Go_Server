@@ -19,7 +19,7 @@ public class MemberController {
     public ResponseEntity<String> login(@RequestParam String loginId, String password, HttpSession session) {
         //pk
         //아이디 존재여부
-        MemberDTO findMember = memberService.findByloginId(loginId);
+        MemberDTO findMember = memberService.login(loginId);
         if (findMember != null && findMember.getPassword().equals(password)) {
             //로그인 성공, 세션이 있으면 있는 세션 반환, 없으면 신규 세션 생성
             session.setAttribute("loginId", findMember.getMemberId());
