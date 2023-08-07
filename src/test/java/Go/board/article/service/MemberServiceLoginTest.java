@@ -2,9 +2,10 @@ package Go.board.article.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-import Go.board.article.dto.MemberDTO;
-import Go.board.article.entitiy.MemberEntity;
-import Go.board.article.repository.MemberRepository;
+import Go.board.dto.MemberDTO;
+import Go.board.entity.MemberEntity;
+import Go.board.repository.MemberRepository;
+import Go.board.service.MemberService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

@@ -1,7 +1,7 @@
-package Go.board.article.Controller;
+package Go.board.controller;
 
-import Go.board.article.dto.MemberDTO;
-import Go.board.article.service.MemberService;
+import Go.board.dto.MemberDTO;
+import Go.board.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

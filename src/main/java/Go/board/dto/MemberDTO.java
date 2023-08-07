@@ -1,6 +1,6 @@
-package Go.board.article.dto;
+package Go.board.dto;
 
-import Go.board.article.entitiy.MemberEntity;
+import Go.board.entity.MemberEntity;
 import lombok.*;
 
 @Getter

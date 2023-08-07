@@ -1,6 +1,6 @@
-package Go.board.article.dto;
+package Go.board.dto;
 
-import Go.board.article.entitiy.ArticleEntity;
+import Go.board.entity.ArticleEntity;
 import lombok.*;
 
 import java.time.LocalDateTime;

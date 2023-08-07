@@ -1,4 +1,4 @@
-package Go.board.article.entitiy;
+package Go.board.entity;
 
 import lombok.Getter;
 import lombok.Setter;

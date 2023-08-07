@@ -1,8 +1,8 @@
-package Go.board.article.service;
+package Go.board.service;
 
-import Go.board.article.dto.ArticleDTO;
-import Go.board.article.entitiy.ArticleEntity;
-import Go.board.article.repository.ArticleRepository;
+import Go.board.dto.ArticleDTO;
+import Go.board.entity.ArticleEntity;
+import Go.board.repository.ArticleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

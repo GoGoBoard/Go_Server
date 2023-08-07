@@ -1,6 +1,6 @@
-package Go.board.article.repository;
+package Go.board.repository;
 
-import Go.board.article.entitiy.MemberEntity;
+import Go.board.entity.MemberEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

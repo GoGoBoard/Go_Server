@@ -1,8 +1,8 @@
-package Go.board.article.service;
+package Go.board.service;
 
-import Go.board.article.dto.MemberDTO;
-import Go.board.article.entitiy.MemberEntity;
-import Go.board.article.repository.MemberRepository;
+import Go.board.dto.MemberDTO;
+import Go.board.entity.MemberEntity;
+import Go.board.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

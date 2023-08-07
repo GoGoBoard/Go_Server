@@ -1,6 +1,6 @@
-package Go.board.article.entitiy;
+package Go.board.entity;
 
-import Go.board.article.dto.MemberDTO;
+import Go.board.dto.MemberDTO;
 import lombok.Getter;
 import lombok.Setter;
 

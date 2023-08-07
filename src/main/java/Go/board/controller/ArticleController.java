@@ -1,7 +1,7 @@
-package Go.board.article.Controller;
+package Go.board.controller;
 
-import Go.board.article.dto.ArticleDTO;
-import Go.board.article.service.ArticleService;
+import Go.board.dto.ArticleDTO;
+import Go.board.service.ArticleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
