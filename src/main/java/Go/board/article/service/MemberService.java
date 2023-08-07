@@ -17,7 +17,7 @@ public class MemberService {
         MemberEntity findMemberEntity = memberRepository.findByLoginId(loginId);
         //dto로 컨버팅한 것을 return
         if (findMemberEntity != null) {
-            return MemberDTO.toomemberDTO(findMemberEntity);
+            return MemberDTO.toMemberDTO(findMemberEntity);
         } else return null;
 
     }

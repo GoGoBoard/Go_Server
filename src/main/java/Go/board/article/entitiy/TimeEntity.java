@@ -14,6 +14,6 @@ import java.time.LocalDateTime;
 @Getter
 public class TimeEntity {
     @CreationTimestamp
-    @Column(name = "write_time",updatable = false)
+    @Column(updatable = false)
     private LocalDateTime writeTime;
 }

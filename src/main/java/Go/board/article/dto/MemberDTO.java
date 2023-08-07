@@ -14,7 +14,7 @@ public class MemberDTO {
     private String password;
     private String nickname;
 
-    public static MemberDTO toomemberDTO(MemberEntity memberEntity) {
+    public static MemberDTO toMemberDTO(MemberEntity memberEntity) {
         MemberDTO memberDTO = new MemberDTO();
         memberDTO.setMemberId(memberEntity.getMemberId());
         memberDTO.setLoginId(memberEntity.getLoginId());

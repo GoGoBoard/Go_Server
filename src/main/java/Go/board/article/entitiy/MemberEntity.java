@@ -13,13 +13,13 @@ import javax.persistence.*;
 public class MemberEntity {
     @Id
     @GeneratedValue
-    @Column(name = "member_id")
+    @Column
     private int memberId;
-    @Column(name = "login_id")
+    @Column
     private String loginId;
-    @Column(name = "password")
+    @Column
     private String password;
-    @Column(name = "nickname")
+    @Column
     private String nickname;
 
     public static MemberEntity toSaveMember(MemberDTO memberDTO) {
