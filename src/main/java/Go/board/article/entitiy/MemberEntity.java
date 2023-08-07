@@ -13,6 +13,7 @@ import javax.persistence.*;
 public class MemberEntity {
     @Id
     @GeneratedValue
+    @Column(name = "memberId")
     private int memberId;
     @Column(name = "loginId")
     private String loginId;

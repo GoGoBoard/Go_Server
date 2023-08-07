@@ -12,8 +12,10 @@ import javax.persistence.*;
 @Table(name = "post")
 public class ArticleEntity extends TimeEntity {
     @Id //pk컬럼 지정
-    @GeneratedValue(strategy = GenerationType.IDENTITY)//auto_increment
+    @GeneratedValue(strategy = GenerationType.AUTO)//auto_increment
+    @Column(name = "post_id")
     private int postId;
+    @Column(name = "member_id")
     private int memberId;
     private String title;
     private String content;

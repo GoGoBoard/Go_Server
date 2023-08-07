@@ -27,7 +27,7 @@ public class ArticleController {
     public ResponseEntity<String> save(@RequestBody ArticleDTO articleDTO) {
         try {
             articleService.save(articleDTO);
-            return ResponseEntity.ok("");
+            return ResponseEntity.ok("저장 성공");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("저장 실패");
         }

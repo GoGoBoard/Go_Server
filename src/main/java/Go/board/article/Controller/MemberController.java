@@ -25,7 +25,7 @@ public class MemberController {
             session.setAttribute("loginId", findMember.getMemberId());
             return ResponseEntity.ok("로그인 성공");
         } else {
-            //러그인 실패처리
+            //로그인 실패처리
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("아이디 또는 비밀번호가 일치하지 않습니다");
         }
     }
