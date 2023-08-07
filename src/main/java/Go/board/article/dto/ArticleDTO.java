@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor//기본생성자
 @AllArgsConstructor//모든 필드를 매개변수로 하는 생성자
 public class ArticleDTO {
-    private int memberId;
     private int postId;
+    private int memberId;
     private String title;
     private String content;
     private LocalDateTime writeTime;
@@ -31,6 +31,7 @@ public class ArticleDTO {
         articleDTO.setMemberId(articleEntity.getMemberId());
         articleDTO.setTitle(articleEntity.getTitle());
         articleDTO.setContent(articleEntity.getContent());
+        articleDTO.setWriteTime(articleEntity.getWriteTime());
         return articleDTO;
     }
 

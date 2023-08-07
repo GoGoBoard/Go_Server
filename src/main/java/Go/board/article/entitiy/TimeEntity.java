@@ -1,6 +1,7 @@
 package Go.board.article.entitiy;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-@Getter
+@Getter @Setter
 public class TimeEntity {
     @CreationTimestamp
     @Column(updatable = false)

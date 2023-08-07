@@ -29,7 +29,7 @@ public class ArticleController {
             articleService.save(articleDTO);
             return ResponseEntity.ok("저장 성공");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("저장 실패");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("저장 실패");
         }
     }
 
@@ -47,7 +47,7 @@ public class ArticleController {
             articleService.save(articleDTO);
             return ResponseEntity.ok("");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("저장 실패");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("저장 실패");
         }
 
     }

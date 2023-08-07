@@ -34,7 +34,7 @@ public class MemberServiceLoginTest {
         when(memberRepository.findByLoginId(loginId)).thenReturn(memberEntity);
 
         // When
-        MemberDTO result = memberService.findByloginId(loginId);
+        MemberDTO result = memberService.login(loginId);
 
         // Then
         assertEquals(memberEntity.getMemberId(), result.getMemberId());
@@ -54,7 +54,7 @@ public class MemberServiceLoginTest {
         when(memberRepository.findByLoginId(loginId)).thenReturn(null);
 
         // When
-        MemberDTO result = memberService.findByloginId(loginId);
+        MemberDTO result = memberService.login(loginId);
 
         // Then
         // The result should be null as there is no member with the given loginId
