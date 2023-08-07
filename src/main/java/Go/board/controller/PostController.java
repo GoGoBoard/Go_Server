@@ -36,8 +36,8 @@ public class PostController {
     }
 
     @GetMapping("/{articleId}")
-    public ResponseEntity<Post> getPostById(@PathVariable int articleId) {
-        Optional<Post> optionalPost = postService.getPostById(articleId);
+    public ResponseEntity<PostDTO> getPostById(@PathVariable int articleId) {
+        Optional<PostDTO> optionalPost = postService.getPostById(articleId);
         return optionalPost.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
@@ -48,8 +48,8 @@ public class PostController {
     }
 
     @PutMapping("/{articleId}")
-    public ResponseEntity<Post> updatePost(@PathVariable int articleId, @RequestBody Post updatedPost) {
-        Post post = postService.updatePost(articleId, updatedPost);
-        return post != null ? ResponseEntity.ok(post) : ResponseEntity.notFound().build();
+    public ResponseEntity<PostDTO> updatePost(@PathVariable int articleId, @RequestBody PostDTO updatedPostDTO) {
+        PostDTO postDTO = postService.updatePost(articleId, updatedPostDTO);
+        return postDTO != null ? ResponseEntity.ok(postDTO) : ResponseEntity.notFound().build();
     }
 }
