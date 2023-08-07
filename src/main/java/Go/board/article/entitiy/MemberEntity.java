@@ -13,9 +13,9 @@ import javax.persistence.*;
 public class MemberEntity {
     @Id
     @GeneratedValue
-    @Column
+    @Column(name="member_id")
     private int memberId;
-    @Column
+    @Column(name="login_id")
     private String loginId;
     @Column
     private String password;
