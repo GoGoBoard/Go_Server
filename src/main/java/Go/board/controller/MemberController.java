@@ -17,12 +17,11 @@ public class MemberController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestParam String loginId, String password, HttpSession session) {
-        //pk
-        //아이디 존재여부
-        MemberDTO findMember = memberService.login(loginId);
-        if (findMember != null && findMember.getPassword().equals(password)) {
+        MemberDTO loginMember = memberService.login(loginId, password);
+        if (loginMember != null) {
             //로그인 성공, 세션이 있으면 있는 세션 반환, 없으면 신규 세션 생성
-            session.setAttribute("loginId", findMember.getMemberId());
+            session.setAttribute("memberId", loginMember.getMemberId());
+            session.setMaxInactiveInterval(1800);//30분 유지
             return ResponseEntity.ok("로그인 성공");
         } else {
             //로그인 실패처리
@@ -35,7 +34,12 @@ public class MemberController {
         boolean registerOk = memberService.registerMember(memberDTO);
         if (registerOk) {
             return ResponseEntity.ok("회원가입에 성공하였습니다.");
-        } else return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("회원가입에 실패하였습니다.");
+        } else return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("회원가입에 실패하였습니다.(중복된 아이디 존재)");
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpSession session){
+        session.invalidate();
+        return ResponseEntity.ok("로그아웃되었습니다.");
+    }
 }

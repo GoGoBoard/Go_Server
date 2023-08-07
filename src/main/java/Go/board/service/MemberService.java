@@ -12,19 +12,22 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
-    public MemberDTO login(String loginId) {
-        //db에서  로그인 id를 찾고
-        MemberEntity findMemberEntity = memberRepository.findByLoginId(loginId);
-        //dto로 컨버팅한 것을 return
-        if (findMemberEntity != null) {
-            return MemberDTO.toMemberDTO(findMemberEntity);
-        } else return null;
+    public MemberEntity findMemberByLoginId(String loginId) {
+        return memberRepository.findByLoginId(loginId);
+    }
 
+    public MemberDTO login(String loginId, String password) {
+        //db에서  로그인 id를 찾고
+        MemberEntity findMemberEntity = findMemberByLoginId(loginId);
+
+        if (findMemberEntity != null && findMemberEntity.getPassword().equals(password)) {
+            return MemberDTO.toMemberDTO(findMemberEntity);//dto로 컨버팅한 것을 return
+        } else return null;
     }
 
     public boolean registerMember(MemberDTO memberDTO) {
-        MemberEntity findMemberEntity = memberRepository.findByLoginId(memberDTO.getLoginId());
-        if (findMemberEntity != null) {
+        MemberEntity findMemberEntity = findMemberByLoginId(memberDTO.getLoginId());
+        if (findMemberEntity != null) {//해당 로그인아이디 존재
             return false;
         } else {
             memberRepository.save(MemberEntity.toSaveMember(memberDTO));
