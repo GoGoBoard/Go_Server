@@ -22,13 +22,13 @@ public class PostController {
         this.postService = postService;
     }
 
-    @GetMapping("/")
+    @GetMapping()
     public ResponseEntity<List<Post>> getAllPosts(@RequestParam(defaultValue = "1") int p) {
         List<Post> posts = postService.getAllPostsByPage(p);
         return ResponseEntity.ok(posts);
     }
 
-    @PostMapping("/")
+    @PostMapping()
     public ResponseEntity<Post> createPost(@RequestBody Post newPost) {
         Post createdPost = postService.createPost(newPost);
         return new ResponseEntity<>(createdPost, HttpStatus.CREATED);
