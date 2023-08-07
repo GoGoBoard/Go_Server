@@ -1,40 +1,50 @@
 package Go.board.service;
 
+import Go.board.dto.PostDTO;
 import Go.board.entity.Post;
 import Go.board.repository.PostRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PostService {
     private final PostRepository postRepository;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    public PostService(PostRepository postRepository) {
+    public PostService(PostRepository postRepository, ModelMapper modelMapper) {
         this.postRepository = postRepository;
+        this.modelMapper = modelMapper;
     }
 
-    public List<Post> getAllPostsByPage(int page) {
+    public List<PostDTO> getAllPostsByPage(int page) {
         int pageSize = 10;
         Page<Post> postPage = postRepository.findAll(PageRequest.of(page - 1, pageSize));
-        return postPage.getContent();
-    }
+        return postPage.getContent().stream()
+                .map(post -> modelMapper.map(post, PostDTO.class))
+                .collect(Collectors.toList());    }
 
     public List<Post> getAllPosts() {
         return postRepository.findAll();
     }
 
-    public Post createPost(Post newPost) {
-        return postRepository.save(newPost);
+    public PostDTO createPost(PostDTO newPostDTO) {
+        Post newPost = modelMapper.map(newPostDTO, Post.class);
+        Post createdPost = postRepository.save(newPost);
+        return modelMapper.map(createdPost, PostDTO.class);
     }
 
-    public Optional<Post> getPostById(int postId) {
-        return postRepository.findById(postId);
+    public Optional<PostDTO> getPostById(int postId) {
+        Optional<Post> optionalPost = postRepository.findById(postId);
+        return optionalPost.map(post -> modelMapper.map(post, PostDTO.class));
     }
 
     public boolean deletePostById(int postId) {
@@ -45,16 +55,13 @@ public class PostService {
         return false;
     }
 
-    public Post updatePost(int postId, Post updatedPost) {
+    public PostDTO updatePost(int postId, PostDTO updatedPostDTO) {
         Optional<Post> optionalPost = postRepository.findById(postId);
         if (optionalPost.isPresent()) {
-            Post post = optionalPost.get();
-            // Update the fields of the existing post with data from the updatedPost
-            post.setTitle(updatedPost.getTitle());
-            post.setContent(updatedPost.getContent());
-            post.setWriteTime(updatedPost.getWriteTime());
-            // Save the updated post
-            return postRepository.save(post);
+            Post existingPost = optionalPost.get();
+            modelMapper.map(updatedPostDTO, existingPost);
+            Post updatedPost = postRepository.save(existingPost);
+            return modelMapper.map(updatedPost, PostDTO.class);
         }
         return null;
     }

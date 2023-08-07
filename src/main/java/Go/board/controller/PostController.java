@@ -1,5 +1,6 @@
 package Go.board.controller;
 
+import Go.board.dto.PostDTO;
 import Go.board.entity.Post;
 import Go.board.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,14 +24,14 @@ public class PostController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<Post>> getAllPosts(@RequestParam(defaultValue = "1") int p) {
-        List<Post> posts = postService.getAllPostsByPage(p);
+    public ResponseEntity<List<PostDTO>> getAllPosts(@RequestParam(defaultValue = "1") int p) {
+        List<PostDTO> posts = postService.getAllPostsByPage(p);
         return ResponseEntity.ok(posts);
     }
 
     @PostMapping()
-    public ResponseEntity<Post> createPost(@RequestBody Post newPost) {
-        Post createdPost = postService.createPost(newPost);
+    public ResponseEntity<PostDTO> createPost(@RequestBody PostDTO newPostDTO) {
+        PostDTO createdPost = postService.createPost(newPostDTO);
         return new ResponseEntity<>(createdPost, HttpStatus.CREATED);
     }
 
