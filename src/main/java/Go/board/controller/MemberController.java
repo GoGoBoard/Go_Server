@@ -7,6 +7,7 @@ import Go.board.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,7 @@ public class MemberController {
     @PostMapping("/login")
     public ResponseEntity<String> login(LoginDTO loginDTO, HttpSession session) {
         MemberEntity loginMember = memberService.login(loginDTO);
+
         if (loginMember != null) {
             //로그인 성공, 세션이 있으면 있는 세션 반환, 없으면 신규 세션 생성
             session.setAttribute("memberId", loginMember.getMemberId());
@@ -36,7 +38,7 @@ public class MemberController {
     }
 
     @PostMapping("/join")
-    public ResponseEntity<String> register(@RequestBody RegisterDTO registerDTO) {
+    public ResponseEntity<String> register(@Validated @RequestBody RegisterDTO registerDTO) {
         boolean registerOk = memberService.registerMember(registerDTO);
         if (registerOk) {
             return ResponseEntity.ok("회원가입에 성공하였습니다.");
