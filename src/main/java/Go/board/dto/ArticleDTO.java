@@ -2,8 +2,11 @@ package Go.board.dto;
 
 import Go.board.entity.ArticleEntity;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 //DTO(data transfer Object)
 @Getter
@@ -16,7 +19,13 @@ public class ArticleDTO {
     private int memberId;
     private String title;
     private String content;
+
+    public void setFiles(List<MultipartFile> files) {
+        this.files = files;
+    }
+
     private LocalDateTime writeTime;
+    private List<MultipartFile> files = new ArrayList<>();
 
     public ArticleDTO(int memberId, String title, String content, LocalDateTime writeTime) {
         this.memberId = memberId;

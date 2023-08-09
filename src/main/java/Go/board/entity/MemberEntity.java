@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 
 @Entity
 @Getter
@@ -21,6 +22,14 @@ public class MemberEntity {
     private String password;
     @Column
     private String nickname;
+    //사용자:게시글 일대다
+    @OneToMany(
+            mappedBy = "member",
+            cascade = {CascadeType.PERSIST,CascadeType.REMOVE},//영속성 전이
+            orphanRemoval = true
+
+    )
+    ArrayList<ArticleEntity> articles = new ArrayList<>();
 
     public static MemberEntity toSaveMember(MemberDTO memberDTO) {
         MemberEntity memberEntity = new MemberEntity();

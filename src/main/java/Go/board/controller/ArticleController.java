@@ -9,6 +9,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -24,8 +25,10 @@ public class ArticleController {
     }
 
     @PostMapping("")
-    public ResponseEntity<String> save(@RequestBody ArticleDTO articleDTO) {
+    public ResponseEntity<String> save(@RequestPart(value = "file",required = false)List<MultipartFile> files,
+                                       @RequestPart(value = "ArtilcleDTO") ArticleDTO articleDTO) {
         try {
+            articleDTO.setFiles(files);//받아온 파일 dto에 저장
             articleService.save(articleDTO);
             return ResponseEntity.ok("저장 성공");
         } catch (Exception e) {
