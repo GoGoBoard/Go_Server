@@ -19,11 +19,6 @@ public class ArticleDTO {
     private int memberId;
     private String title;
     private String content;
-
-    public void setFiles(List<MultipartFile> files) {
-        this.files = files;
-    }
-
     private LocalDateTime writeTime;
     private List<MultipartFile> files = new ArrayList<>();
 

@@ -2,14 +2,18 @@ package Go.board.service;
 
 import Go.board.dto.ArticleDTO;
 import Go.board.entity.ArticleEntity;
+import Go.board.entity.FileEntity;
 import Go.board.repository.ArticleRepository;
+import Go.board.repository.FileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -18,10 +22,21 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ArticleService {
+    private final FileService fileService;
     private final ArticleRepository articleRepository;
+    private final FileRepository fileRepository;
+    //게시글서비스에서는 파일리스트를 받아와 db에 저장하고
 
-    public void save(ArticleDTO articleDTO) {
+
+    public void save(ArticleDTO articleDTO, List<MultipartFile> fileList) throws IOException {
         ArticleEntity articleEntity = ArticleEntity.toSaveEntity(articleDTO);
+        List<FileEntity> files = fileService.handleFile(fileList);
+        if(!files.isEmpty()){
+            //파일이 있을 때만
+            for (FileEntity file : files) {
+                articleEntity.addFile(fileRepository.save(file));
+            }
+        }
         articleRepository.save(articleEntity);
     }
 

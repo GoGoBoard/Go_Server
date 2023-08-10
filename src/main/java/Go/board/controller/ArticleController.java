@@ -25,11 +25,9 @@ public class ArticleController {
     }
 
     @PostMapping("")
-    public ResponseEntity<String> save(@RequestPart(value = "file",required = false)List<MultipartFile> files,
-                                       @RequestPart(value = "ArtilcleDTO") ArticleDTO articleDTO) {
+    public ResponseEntity<String> save(@ModelAttribute ArticleDTO articleDTO, @ModelAttribute List<MultipartFile> files) {
         try {
-            articleDTO.setFiles(files);//받아온 파일 dto에 저장
-            articleService.save(articleDTO);
+            articleService.save(articleDTO, files);
             return ResponseEntity.ok("저장 성공");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("저장 실패");
@@ -38,16 +36,17 @@ public class ArticleController {
 
     @GetMapping("/{postId}")
     public ResponseEntity<ArticleDTO> getPostByPostId(@PathVariable("postId") int postId) {
+        //Todo 첨부파일도 가져오도록
         ArticleDTO articleDTO = articleService.findByPostId(postId);
         return articleDTO != null ? ResponseEntity.ok(articleDTO) : ResponseEntity.notFound().build();
         //return ResponseEntity.ok(articleDTO);
-
     }
 
     @PutMapping("/{postId}")
     public ResponseEntity<String> update(ArticleDTO articleDTO) {
         try {
-            articleService.save(articleDTO);
+            //Todo
+            // articleService.save(articleDTO);
             return ResponseEntity.ok("");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("저장 실패");
