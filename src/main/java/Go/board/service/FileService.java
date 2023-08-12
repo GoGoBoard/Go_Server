@@ -50,7 +50,7 @@ public class FileService {
                 String newFileName = System.nanoTime() + fileExtension;
                 FileEntity fileEntity = new FileEntity(
                         f.getOriginalFilename(),
-                        path + File.separator + newFileName
+                        path + "//" + newFileName
                 );
                 fileEntityList.add(fileEntity);
                 file = new File(path + File.separator + newFileName);

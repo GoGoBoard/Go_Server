@@ -1,6 +1,7 @@
 package Go.board.controller;
 
 import Go.board.dto.ArticleDTO;
+import Go.board.dto.ArticleSaveDTO;
 import Go.board.service.ArticleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -25,11 +26,20 @@ public class ArticleController {
     }
 
     @PostMapping("")
-    public ResponseEntity<String> save(@ModelAttribute ArticleDTO articleDTO, @ModelAttribute List<MultipartFile> files) {
+    public ResponseEntity<String> save(@RequestParam(name = "title") String title,
+                                       @RequestParam(name = "content") String content,
+                                       @RequestPart(name = "files") List<MultipartFile> files
+    ) {
         try {
-            articleService.save(articleDTO, files);
+            ArticleSaveDTO articleSaveDTO = new ArticleSaveDTO();
+            articleSaveDTO.setTitle(title);
+            articleSaveDTO.setContent(content);
+            articleSaveDTO.setFiles(files);
+            //  int memberId = (int) session.getAttribute("memberId");
+            articleService.save(articleSaveDTO, 41);
             return ResponseEntity.ok("저장 성공");
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("저장 실패");
         }
     }

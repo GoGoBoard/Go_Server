@@ -15,9 +15,9 @@ import java.util.List;
 public class MemberEntity {
     @Id
     @GeneratedValue
-    @Column(name="member_id")
+    @Column(name = "member_id")
     private int memberId;
-    @Column(name="login_id")
+    @Column(name = "login_id")
     private String loginId;
     @Column
     private String password;
@@ -26,10 +26,17 @@ public class MemberEntity {
     //사용자:게시글 일대다
     @OneToMany(
             mappedBy = "member",
-            cascade = {CascadeType.PERSIST,CascadeType.REMOVE},//영속성 전이
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},//영속성 전이
             orphanRemoval = true
     )
-    List<ArticleEntity> articles = new ArrayList<>();
+    private List<ArticleEntity> articles = new ArrayList<>();
+
+    public void addArticle(ArticleEntity article) {
+        this.articles.add(article);
+        if (article.getMember() != this) {
+            article.setMember(this);
+        }
+    }
 
     public static MemberEntity toSaveMember(MemberDTO memberDTO) {
         MemberEntity memberEntity = new MemberEntity();
@@ -40,4 +47,13 @@ public class MemberEntity {
         return memberEntity;
     }
 
+    @Override
+    public String toString() {
+        return "MemberEntity{" +
+                "memberId=" + memberId +
+                ", loginId='" + loginId + '\'' +
+                ", password='" + password + '\'' +
+                ", nickname='" + nickname + '\'' +
+                '}';
+    }
 }

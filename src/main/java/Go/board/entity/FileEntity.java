@@ -16,7 +16,7 @@ public class FileEntity {
     private int fileId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id", updatable = false)
+    @JoinColumn(name = "post_id")
     private ArticleEntity article;
 
     private String url; //파일저장경로
@@ -33,5 +33,14 @@ public class FileEntity {
         //게시글에 현재 파일이 존재하지 않으면 파일 추가
         if (!articleEntity.getFiles().contains(this))
             articleEntity.getFiles().add(this);
+    }
+
+    @Override
+    public String toString() {
+        return "FileEntity{" +
+                "fileId=" + fileId +
+                ", url='" + url + '\'' +
+                ", fileName='" + fileName + '\'' +
+                '}';
     }
 }

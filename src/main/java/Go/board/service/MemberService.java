@@ -19,6 +19,10 @@ public class MemberService {
         return memberRepository.findByLoginId(loginId);
     }
 
+    public MemberEntity findMemberByMemberId(int memberId) {
+        return memberRepository.findByMemberId(memberId);
+    }
+
     public MemberEntity login(LoginDTO loginDTO) {
         //db에서  로그인 id를 찾고
         MemberEntity findMemberEntity = findMemberByLoginId(loginDTO.getLoginId());

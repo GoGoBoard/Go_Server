@@ -1,8 +1,10 @@
 package Go.board.service;
 
 import Go.board.dto.ArticleDTO;
+import Go.board.dto.ArticleSaveDTO;
 import Go.board.entity.ArticleEntity;
 import Go.board.entity.FileEntity;
+import Go.board.entity.MemberEntity;
 import Go.board.repository.ArticleRepository;
 import Go.board.repository.FileRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,9 +13,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -22,21 +24,26 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ArticleService {
+    private final MemberService memberService;
     private final FileService fileService;
     private final ArticleRepository articleRepository;
     private final FileRepository fileRepository;
-    //게시글서비스에서는 파일리스트를 받아와 db에 저장하고
 
+    public void save(ArticleSaveDTO articleSaveDTO, int memberId) throws IOException {
+        MemberEntity memberEntity = memberService.findMemberByMemberId(memberId);//글 주인을 찾자
+        System.out.println(memberEntity);
+        ArticleEntity articleEntity = ArticleEntity.toArticleEntity(articleSaveDTO);//제목, 글 저장
+        articleEntity.setMember(memberEntity);//member설정
+        articleEntity.setWriteTime(LocalDateTime.now());//현재 서버 시간으로 작성시간 설정
 
-    public void save(ArticleDTO articleDTO, List<MultipartFile> fileList) throws IOException {
-        ArticleEntity articleEntity = ArticleEntity.toSaveEntity(articleDTO);
-        List<FileEntity> files = fileService.handleFile(fileList);
-        if(!files.isEmpty()){
-            //파일이 있을 때만
+        List<FileEntity> files = fileService.handleFile(articleSaveDTO.getFiles());//파일처리
+        if (!files.isEmpty()) {
             for (FileEntity file : files) {
+                file.setArticle(articleEntity);
                 articleEntity.addFile(fileRepository.save(file));
             }
         }
+        System.out.println(articleEntity);
         articleRepository.save(articleEntity);
     }
 
@@ -74,7 +81,7 @@ public class ArticleService {
                 articleRepository.findAll(PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "postId")));
         Page<ArticleDTO> articleDTOS =
                 articleEntities.map(articleEntity -> ArticleDTO.toarticleDTO(articleEntity
-                        ));
+                ));
         return articleDTOS;
     }
 }

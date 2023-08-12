@@ -16,14 +16,14 @@ import java.util.List;
 @AllArgsConstructor//모든 필드를 매개변수로 하는 생성자
 public class ArticleDTO {
     private int postId;
-    private int memberId;
+    private String nickname;
     private String title;
     private String content;
     private LocalDateTime writeTime;
     private List<MultipartFile> files = new ArrayList<>();
 
-    public ArticleDTO(int memberId, String title, String content, LocalDateTime writeTime) {
-        this.memberId = memberId;
+    public ArticleDTO(String nickname, String title, String content, LocalDateTime writeTime) {
+        this.nickname = nickname;
         this.title = title;
         this.content = content;
         this.writeTime = writeTime;
@@ -32,7 +32,7 @@ public class ArticleDTO {
     public static ArticleDTO toarticleDTO(ArticleEntity articleEntity) {
         ArticleDTO articleDTO = new ArticleDTO();
         articleDTO.setPostId(articleEntity.getPostId());
-        articleDTO.setMemberId(articleEntity.getMemberId());
+        //  articleDTO.nickname(articleEntity.getMemberId());
         articleDTO.setTitle(articleEntity.getTitle());
         articleDTO.setContent(articleEntity.getContent());
         articleDTO.setWriteTime(articleEntity.getWriteTime());
