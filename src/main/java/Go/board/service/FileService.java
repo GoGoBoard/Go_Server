@@ -1,6 +1,8 @@
 package Go.board.service;
 
+import Go.board.entity.ArticleEntity;
 import Go.board.entity.FileEntity;
+import Go.board.repository.FileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -14,6 +16,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class FileService {
+    private final FileRepository fileRepository;
 
     //파일서비스에서는 받아온 파일의 확장자를 확인하고
     //로컬에 실제 파일 저장
@@ -62,4 +65,35 @@ public class FileService {
         return fileEntityList;
 
     }
+
+    public List<FileEntity> getFileList(int postId) {
+        List<FileEntity> fileEntityList = fileRepository.findAll();
+        List<FileEntity> returnList = new ArrayList<>();
+        for (FileEntity fileEntity : fileEntityList) {
+            if (fileEntity.getArticle().getPostId() == postId) {
+                returnList.add(fileEntity);
+            }
+        }
+        return returnList;
+
+    }
+
+    public List<String> showFile(List<FileEntity> fileEntityList) {
+        List<String> filePathList = new ArrayList<>();
+        for (FileEntity fileEntity : fileEntityList) {
+            String filePath = fileEntity.getFileName();
+            filePathList.add(filePath);
+        }
+        return filePathList;
+    }
+
+    public void saveFile(List<FileEntity> files, ArticleEntity articleEntity) {
+        for (FileEntity file : files) {
+            file.setArticle(articleEntity);
+            articleEntity.addFile(fileRepository.save(file));
+        }
+    }
+    //파일리스트 전체 조회
+    //파일리스트 대조 후 추가
+    //파일리스트 대조 후 삭제
 }

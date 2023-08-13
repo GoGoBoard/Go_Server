@@ -1,6 +1,6 @@
 package Go.board.controller;
 
-import Go.board.dto.ArticleDTO;
+import Go.board.dto.ArticleResponseDTO;
 import Go.board.dto.ArticleSaveDTO;
 import Go.board.service.ArticleService;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @RestController
@@ -21,22 +22,23 @@ public class ArticleController {
     private final ArticleService articleService;
 
     @GetMapping("")
-    public ResponseEntity<List<ArticleDTO>> getAll() {
+    public ResponseEntity<List<ArticleResponseDTO>> getAll() {
         return articleService.findAll().map(ResponseEntity::ok).orElse(ResponseEntity.noContent().build());
     }
 
     @PostMapping("")
     public ResponseEntity<String> save(@RequestParam(name = "title") String title,
                                        @RequestParam(name = "content") String content,
-                                       @RequestPart(name = "files") List<MultipartFile> files
+                                       @RequestPart(name = "files") List<MultipartFile> files,
+                                       HttpSession session
     ) {
         try {
             ArticleSaveDTO articleSaveDTO = new ArticleSaveDTO();
             articleSaveDTO.setTitle(title);
             articleSaveDTO.setContent(content);
             articleSaveDTO.setFiles(files);
-            //  int memberId = (int) session.getAttribute("memberId");
-            articleService.save(articleSaveDTO, 41);
+            int memberId = (int) session.getAttribute("memberId");
+            articleService.save(articleSaveDTO, memberId);
             return ResponseEntity.ok("저장 성공");
         } catch (Exception e) {
             e.printStackTrace();
@@ -45,18 +47,19 @@ public class ArticleController {
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<ArticleDTO> getPostByPostId(@PathVariable("postId") int postId) {
+    public ResponseEntity<ArticleResponseDTO> getPostByPostId(@PathVariable("postId") int postId) {
         //Todo 첨부파일도 가져오도록
-        ArticleDTO articleDTO = articleService.findByPostId(postId);
-        return articleDTO != null ? ResponseEntity.ok(articleDTO) : ResponseEntity.notFound().build();
-        //return ResponseEntity.ok(articleDTO);
+        ArticleResponseDTO articleResponseDTO = articleService.findByPostId(postId);
+        return articleResponseDTO != null ? ResponseEntity.ok(articleResponseDTO) : ResponseEntity.notFound().build();
+        //return ResponseEntity.ok(articleResponseDTO);
     }
 
     @PutMapping("/{postId}")
-    public ResponseEntity<String> update(ArticleDTO articleDTO) {
+    public ResponseEntity<String> update(ArticleSaveDTO articleSaveDTO
+    ) {
         try {
             //Todo
-            // articleService.save(articleDTO);
+            // articleService.save(articleResponseDTO);
             return ResponseEntity.ok("");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("저장 실패");
@@ -71,9 +74,9 @@ public class ArticleController {
     }
 
     @GetMapping("/paging")//article/paging?page=1
-    public ResponseEntity<Page<ArticleDTO>> paging(@PageableDefault(page = 1) Pageable pageable) {
+    public ResponseEntity<Page<ArticleResponseDTO>> paging(@PageableDefault(page = 1) Pageable pageable) {
         // pageable.getPageNumber();
-        Page<ArticleDTO> articleList = articleService.paging(pageable);
+        Page<ArticleResponseDTO> articleList = articleService.paging(pageable);
         return ResponseEntity.ok(articleList);
     }
 }

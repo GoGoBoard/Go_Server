@@ -1,12 +1,11 @@
 package Go.board.service;
 
-import Go.board.dto.ArticleDTO;
+import Go.board.dto.ArticleResponseDTO;
 import Go.board.dto.ArticleSaveDTO;
 import Go.board.entity.ArticleEntity;
 import Go.board.entity.FileEntity;
 import Go.board.entity.MemberEntity;
 import Go.board.repository.ArticleRepository;
-import Go.board.repository.FileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,7 +26,6 @@ public class ArticleService {
     private final MemberService memberService;
     private final FileService fileService;
     private final ArticleRepository articleRepository;
-    private final FileRepository fileRepository;
 
     public void save(ArticleSaveDTO articleSaveDTO, int memberId) throws IOException {
         MemberEntity memberEntity = memberService.findMemberByMemberId(memberId);//글 주인을 찾자
@@ -38,30 +36,31 @@ public class ArticleService {
 
         List<FileEntity> files = fileService.handleFile(articleSaveDTO.getFiles());//파일처리
         if (!files.isEmpty()) {
-            for (FileEntity file : files) {
-                file.setArticle(articleEntity);
-                articleEntity.addFile(fileRepository.save(file));
-            }
+            fileService.saveFile(files, articleEntity);
         }
         System.out.println(articleEntity);
         articleRepository.save(articleEntity);
     }
 
-    public Optional<List<ArticleDTO>> findAll() {
+    public Optional<List<ArticleResponseDTO>> findAll() {
         List<ArticleEntity> articleEntityList = articleRepository.findAll();
-        List<ArticleDTO> articleDTOList = new ArrayList<>();
+        List<ArticleResponseDTO> articleResponseDTOList = new ArrayList<>();
+
         for (ArticleEntity articleEntity : articleEntityList) {
-            articleDTOList.add(ArticleDTO.toarticleDTO(articleEntity));
+            articleResponseDTOList.add(ArticleResponseDTO.toarticleResponseDTO(articleEntity));
         }
-        return Optional.of(articleDTOList);
+        return Optional.of(articleResponseDTOList);
     }
 
-    public ArticleDTO findByPostId(int postId) {
+    public ArticleResponseDTO findByPostId(int postId) {
         Optional<ArticleEntity> optionalArticleEntity = articleRepository.findById(postId);
+        List<FileEntity> fileList = fileService.getFileList(postId);
+        List<String> filePathList = fileService.showFile(fileList);
         if (optionalArticleEntity.isPresent()) {
             ArticleEntity articleEntity = optionalArticleEntity.get();
-            ArticleDTO articleDTO = ArticleDTO.toarticleDTO(articleEntity);
-            return articleDTO;
+            ArticleResponseDTO articleResponseDTO = ArticleResponseDTO.toarticleResponseDTO(articleEntity);
+            articleResponseDTO.setFilePathList(filePathList);
+            return articleResponseDTO;
         } else return null;
     }
 
@@ -73,14 +72,14 @@ public class ArticleService {
         return false;
     }
 
-    public Page<ArticleDTO> paging(Pageable pageable) {
+    public Page<ArticleResponseDTO> paging(Pageable pageable) {
         int page = pageable.getPageNumber() - 1;//페이지 위치에 있는 값은 0부터 시작 like배열
         int pageLimit = 3; //한 페이지에 보여줄 개수
         //한 페이지 당 3개씩 글을 보여주고 정렬기준은 id기준으로 내림차순 정렬
         Page<ArticleEntity> articleEntities =
                 articleRepository.findAll(PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "postId")));
-        Page<ArticleDTO> articleDTOS =
-                articleEntities.map(articleEntity -> ArticleDTO.toarticleDTO(articleEntity
+        Page<ArticleResponseDTO> articleDTOS =
+                articleEntities.map(articleEntity -> ArticleResponseDTO.toarticleResponseDTO(articleEntity
                 ));
         return articleDTOS;
     }
