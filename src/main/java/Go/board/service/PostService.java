@@ -1,6 +1,7 @@
 package Go.board.service;
 
 import Go.board.dto.PostDTO;
+import Go.board.dto.PostSaveRequestDTO;
 import Go.board.entity.Post;
 import Go.board.repository.PostRepository;
 import org.modelmapper.ModelMapper;
@@ -36,10 +37,10 @@ public class PostService {
         return postRepository.findAll();
     }
 
-    public PostDTO createPost(PostDTO newPostDTO) {
+    public PostSaveRequestDTO createPost(PostDTO newPostDTO) {
         Post newPost = modelMapper.map(newPostDTO, Post.class);
         Post createdPost = postRepository.save(newPost);
-        return modelMapper.map(createdPost, PostDTO.class);
+        return modelMapper.map(createdPost, PostSaveRequestDTO.class);
     }
 
     public Optional<PostDTO> getPostById(int postId) {

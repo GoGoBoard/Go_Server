@@ -1,6 +1,7 @@
 package Go.board.controller;
 
 import Go.board.dto.PostDTO;
+import Go.board.dto.PostSaveRequestDTO;
 import Go.board.entity.Post;
 import Go.board.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +31,8 @@ public class PostController {
     }
 
     @PostMapping()
-    public ResponseEntity<PostDTO> createPost(@RequestBody PostDTO newPostDTO) {
-        PostDTO createdPost = postService.createPost(newPostDTO);
+    public ResponseEntity<PostSaveRequestDTO> createPost(@RequestBody PostDTO newPostDTO) {
+        PostSaveRequestDTO createdPost = postService.createPost(newPostDTO);
         return new ResponseEntity<>(createdPost, HttpStatus.CREATED);
     }
 
