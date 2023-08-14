@@ -3,6 +3,8 @@ package Go.board.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -20,10 +22,12 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "post_id")
+    @OnDelete(action = OnDeleteAction.CASCADE) // 연관된 post가 삭제되면 같이 삭제됨
     private Post post_id; // 게시글
 
     @ManyToOne
     @JoinColumn(name = "member_id")
+    @OnDelete(action = OnDeleteAction.CASCADE) // 연관된 member가 삭제되면 같이 삭제됨
     private Member member_id; // 작성자
 
     @Column(name = "content")
