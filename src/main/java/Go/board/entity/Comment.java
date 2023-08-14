@@ -23,7 +23,7 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "post_id")
     @OnDelete(action = OnDeleteAction.CASCADE) // 연관된 post가 삭제되면 같이 삭제됨
-    private Post post_id; // 게시글
+    private Post postId; // 게시글
 
     @ManyToOne
     @JoinColumn(name = "member_id")

@@ -12,7 +12,6 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id")
     private int postId;
-
     @ManyToOne
     @JoinColumn(name="member_id")
     private Member memberId;

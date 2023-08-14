@@ -16,7 +16,7 @@ public class CommentDTO {
         return new CommentDTO(
                 comment.getComment_id(),
                 comment.getContent(),
-                comment.getMember_id().getNickname()
+                comment.getWrite_time()
         );
     }
 
