@@ -22,4 +22,6 @@ public class Post {
     private String content;
     @Column(name = "write_time")
     private String writeTime;
+
+
 }
