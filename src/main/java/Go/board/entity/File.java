@@ -20,7 +20,7 @@ public class File {
 
     @ManyToOne
     @JoinColumn(name = "post_id")
-    private Post post_id;
+    private Post post_id; // 첨부된 게시글
 
     private String url;
 

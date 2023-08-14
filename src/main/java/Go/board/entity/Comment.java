@@ -20,11 +20,11 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "post_id")
-    private Post post_id;
+    private Post post_id; // 게시글
 
     @ManyToOne
     @JoinColumn(name = "member_id")
-    private Member member_id;
+    private Member member_id; // 작성자
 
     @Column(name = "content")
     private String content;
