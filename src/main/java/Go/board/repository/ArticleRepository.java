@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ArticleRepository extends JpaRepository<ArticleEntity, Integer> {
-
+    ArticleEntity findByPostId(int postId);
 }

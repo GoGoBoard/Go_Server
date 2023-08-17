@@ -1,6 +1,5 @@
 package Go.board.entity;
 
-import Go.board.dto.ArticleResponseDTO;
 import Go.board.dto.ArticleSaveDTO;
 import lombok.Getter;
 import lombok.Setter;
@@ -45,15 +44,6 @@ public class ArticleEntity extends TimeEntity {
         if (!member.getArticles().contains(this)) {
             member.getArticles().add(this);
         }
-    }
-
-    public static ArticleEntity toSaveEntity(ArticleResponseDTO articleResponseDTO) {
-        ArticleEntity articleEntity = new ArticleEntity();
-        //  articleEntity.setMemberId(articleResponseDTO.getMemberId());
-        articleEntity.setContent(articleResponseDTO.getContent());
-        articleEntity.setTitle(articleResponseDTO.getTitle());
-        articleEntity.setWriteTime(articleResponseDTO.getWriteTime());
-        return articleEntity;
     }
 
     public static ArticleEntity toArticleEntity(ArticleSaveDTO articleSaveDTO) {

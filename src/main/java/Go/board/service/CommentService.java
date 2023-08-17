@@ -1,5 +1,6 @@
 package Go.board.service;
 
+import Go.board.dto.CommentResponseDTO;
 import Go.board.entity.ArticleEntity;
 import Go.board.entity.CommentEntity;
 import Go.board.entity.MemberEntity;
@@ -8,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -27,5 +30,35 @@ public class CommentService {
         CommentEntity save = commentRepository.save(commentEntity);
         if (save == null) return false;
         return true;
+    }
+
+    public CommentResponseDTO updateComment(CommentEntity comment, String content) {
+        comment.setContent(content);
+        CommentResponseDTO dto = new CommentResponseDTO();
+        dto.toCommentResponseDTO(comment);
+        return dto;
+    }
+
+    public boolean deleteComment(int commentId) {
+        CommentEntity find = FindByCommentId(commentId);
+        commentRepository.delete(find);
+        return true;
+    }
+
+    public CommentEntity FindByCommentId(int commentId) {
+        CommentEntity find = commentRepository.findByCommentId(commentId);
+        return find;
+    }
+
+    public List<CommentResponseDTO> getAllComment(int postId) {
+        ArticleEntity find = articleService.findByPostId(postId);
+        List<CommentEntity> all = commentRepository.findAllByPostId(find);
+        List<CommentResponseDTO> DTOlist = new ArrayList<>(all.size());
+        for (CommentEntity commentEntity : all) {
+            CommentResponseDTO dto = new CommentResponseDTO();
+            dto.toCommentResponseDTO(commentEntity);
+            DTOlist.add(dto);
+        }
+        return DTOlist;
     }
 }

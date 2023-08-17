@@ -17,6 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FileService {
     private final FileRepository fileRepository;
+    private final ArticleService articleService;
 
     //파일서비스에서는 받아온 파일의 확장자를 확인하고
     //로컬에 실제 파일 저장
@@ -67,15 +68,9 @@ public class FileService {
     }
 
     public List<FileEntity> getFileList(int postId) {
-        List<FileEntity> fileEntityList = fileRepository.findAll();
-        List<FileEntity> returnList = new ArrayList<>();
-        for (FileEntity fileEntity : fileEntityList) {
-            if (fileEntity.getArticle().getPostId() == postId) {
-                returnList.add(fileEntity);
-            }
-        }
-        return returnList;
-
+        ArticleEntity article = articleService.findByPostId(postId);//article을 찾자
+        List<FileEntity> files = fileRepository.findAllByArticle(article);
+        return files;
     }
 
     public List<String> showFile(List<FileEntity> fileEntityList) {
@@ -91,6 +86,28 @@ public class FileService {
         for (FileEntity file : files) {
             file.setArticle(articleEntity);
             articleEntity.addFile(fileRepository.save(file));
+        }
+    }
+
+    public List<String> getOriginFileNameList(List<FileEntity> fileEntityList) {
+        List<String> nameList = new ArrayList<>();
+        for (FileEntity fileEntity : fileEntityList) {
+            String url = fileEntity.getUrl();
+            nameList.add(url.substring(0, url.length() - 3));//확장자 제거
+        }
+        return nameList;
+    }
+
+    public void updateFile(List<FileEntity> oldfiles, List<MultipartFile> newfiles) throws IOException {
+        if (oldfiles.isEmpty()) {//기존에 파일이 없던 경우
+            List<FileEntity> fileEntityList = handleFile(newfiles);
+        }
+        if (newfiles.isEmpty()) {//첨부파일 다 지운 경우
+            fileRepository.deleteAll();
+        } else {//수정사항 있는 경우
+            for (MultipartFile newfile : newfiles) {
+
+            }
         }
     }
     //파일리스트 전체 조회
