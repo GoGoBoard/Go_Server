@@ -4,6 +4,7 @@ import Go.board.dto.PostDTO;
 import Go.board.dto.PostSaveRequestDTO;
 import Go.board.entity.Post;
 import Go.board.service.PostService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,13 +17,9 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/article")
+@RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
-
-    @Autowired
-    public PostController(PostService postService) {
-        this.postService = postService;
-    }
 
     @GetMapping()
     public ResponseEntity<List<PostDTO>> getAllPosts(@RequestParam(defaultValue = "1") int p) {
