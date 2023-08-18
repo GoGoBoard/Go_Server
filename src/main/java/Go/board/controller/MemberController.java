@@ -4,6 +4,7 @@ import Go.board.dto.JoinRequest;
 import Go.board.dto.LoginRequest;
 import Go.board.entity.Member;
 import Go.board.service.MemberService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,14 +15,10 @@ import javax.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/api/member")
+@RequiredArgsConstructor
 public class MemberController {
 
     private final MemberService memberService;
-
-    @Autowired
-    public MemberController(MemberService memberService) {
-        this.memberService = memberService;
-    }
 
     @PostMapping("/join")
     public ResponseEntity<Void> join(@RequestBody JoinRequest joinRequest) {

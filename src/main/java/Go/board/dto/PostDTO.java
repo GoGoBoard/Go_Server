@@ -8,7 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 public class PostDTO {
     private int postId;
-    private int memberId;
+    private Long memberId;
     private String title;
     private String content;
     private String writeTime;
