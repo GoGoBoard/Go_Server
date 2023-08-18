@@ -63,7 +63,7 @@ public class MemberService {
         Member member = optionalMember.get();
 
         // 찾아온 User의 password와 입력된 password가 다르면 null return
-        if(!passwordEncoder.matches(member.getPassword(),req.getPassword())) {
+        if(!passwordEncoder.matches(req.getPassword(), member.getPassword())) {
             return null;
         }
 
