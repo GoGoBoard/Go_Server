@@ -3,7 +3,7 @@ package Go.board.dto;
 import Go.board.entity.ArticleEntity;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,15 +18,9 @@ public class ArticleResponseDTO {
     private String nickname;
     private String title;
     private String content;
-    private LocalDateTime writeTime;
+    private Timestamp writeTime;
     private List<String> filePathList = new ArrayList<>();
-
-    public ArticleResponseDTO(String nickname, String title, String content, LocalDateTime writeTime) {
-        this.nickname = nickname;
-        this.title = title;
-        this.content = content;
-        this.writeTime = writeTime;
-    }
+    private List<CommentResponseDTO> comments = new ArrayList<>();
 
     public static ArticleResponseDTO toarticleResponseDTO(ArticleEntity articleEntity) {
         ArticleResponseDTO articleResponseDTO = new ArticleResponseDTO();

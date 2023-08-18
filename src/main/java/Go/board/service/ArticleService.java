@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,18 +27,18 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ArticleService {
     private final MemberService memberService;
-    //private final FileService fileService;
+    private final FileService fileService;
     private final ArticleRepository articleRepository;
 
-    public void save(ArticleSaveDTO articleSaveDTO, int memberId) throws IOException {
+    public void save(ArticleSaveDTO articleSaveDTO, int memberId) throws IOException {//저장
         MemberEntity memberEntity = memberService.findMemberByMemberId(memberId);//글 주인을 찾자
         ArticleEntity articleEntity = ArticleEntity.toArticleEntity(articleSaveDTO);//제목, 글 저장
         articleEntity.setMember(memberEntity);//member설정
-        articleEntity.setWriteTime(LocalDateTime.now());//현재 서버 시간으로 작성시간 설정
-        /*List<FileEntity> files = fileService.handleFile(articleSaveDTO.getFiles());//파일처리
+        articleEntity.setWriteTime(Timestamp.valueOf(LocalDateTime.now()));//현재 서버 시간으로 작성시간 설정
+        List<FileEntity> files = fileService.handleFile(articleSaveDTO.getFiles());//파일처리
         if (!files.isEmpty()) {
             fileService.saveFile(files, articleEntity);
-        }*/
+        }
         articleRepository.save(articleEntity);
     }
 
@@ -50,28 +51,22 @@ public class ArticleService {
         return Optional.of(articleResponseDTOList);
     }
 
-    public ArticleEntity findByPostId(int postId) {//게시글 상세조회
+    public ArticleResponseDTO GetArticle(int postId) {//게시글 상세조회
         Optional<ArticleEntity> articleEntity = articleRepository.findById(postId);
-        if (articleEntity.isPresent())
-            return articleEntity.get();
-        else return null;
-      /*  List<FileEntity> fileList = fileService.getFileList(postId);
-        List<String> filePathList = fileService.showFile(fileList);
-
-            ArticleEntity articleEntity = optionalArticleEntity.get();
-            ArticleResponseDTO articleResponseDTO = ArticleResponseDTO.toarticleResponseDTO(articleEntity);
-            articleResponseDTO.setFilePathList(filePathList);*/
-
+        if (articleEntity.isPresent()) {
+            ArticleEntity article = articleEntity.get();//엔티티
+            List<String> filePathList = fileService.getFilePathList(article);//파일
+            ArticleResponseDTO dto = ArticleResponseDTO.toarticleResponseDTO(article);
+            dto.setFilePathList(filePathList);
+            return dto;
+        } else return null;
     }
 
-    public ArticleResponseDTO showArticle(int postId) {
-        //글,,
-        ArticleEntity article = findByPostId(postId);
-        if (article == null) return null; //해당 postId를 가진 글이 없을 경우
-
-        //있으면 파일까지 다 같이 넣어서 보내자
-        ArticleResponseDTO articleResponseDTO = ArticleResponseDTO.toarticleResponseDTO(article);
-        return null;
+    public ArticleEntity findByPostId(int postId) {
+        Optional<ArticleEntity> articleEntity = articleRepository.findById(postId);
+        if (articleEntity.isPresent()) {
+            return articleEntity.get();
+        } else return null;
     }
 
     public void update(int postId, ArticleSaveDTO articleSaveDTO) throws IOException {

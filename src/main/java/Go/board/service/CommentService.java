@@ -8,6 +8,7 @@ import Go.board.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,7 @@ public class CommentService {
         commentEntity.setMemberId(findMember);
         commentEntity.setPostId(findArticle);
         commentEntity.setContent(content);
-        commentEntity.setWriteTime(LocalDateTime.now());
+        commentEntity.setWriteTime(Timestamp.valueOf(LocalDateTime.now()));
         CommentEntity save = commentRepository.save(commentEntity);
         if (save == null) return false;
         return true;
@@ -34,8 +35,8 @@ public class CommentService {
 
     public CommentResponseDTO updateComment(CommentEntity comment, String content) {
         comment.setContent(content);
-        CommentResponseDTO dto = new CommentResponseDTO();
-        dto.toCommentResponseDTO(comment);
+
+        CommentResponseDTO dto = CommentResponseDTO.toCommentResponseDTO(comment);
         return dto;
     }
 

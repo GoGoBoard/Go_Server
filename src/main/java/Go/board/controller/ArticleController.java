@@ -3,8 +3,9 @@ package Go.board.controller;
 import Go.board.dto.ArticlePagingDTO;
 import Go.board.dto.ArticleResponseDTO;
 import Go.board.dto.ArticleSaveDTO;
-import Go.board.entity.ArticleEntity;
+import Go.board.dto.CommentResponseDTO;
 import Go.board.service.ArticleService;
+import Go.board.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,18 +23,14 @@ import java.util.List;
 @RequestMapping("/api/article")
 public class ArticleController {
     private final ArticleService articleService;
-
-    @GetMapping("")
-    public ResponseEntity<List<ArticleResponseDTO>> getAll() {
-        return articleService.findAll().map(ResponseEntity::ok).orElse(ResponseEntity.noContent().build());
-    }
+    private final CommentService commentService;
 
     @PostMapping("")
     public ResponseEntity<String> save(@RequestParam(name = "title") String title,
                                        @RequestParam(name = "content") String content,
                                        @RequestPart(name = "files") List<MultipartFile> files,
                                        HttpSession session
-    ) {//todo file controller article controller분리
+    ) {
         try {
             ArticleSaveDTO articleSaveDTO = new ArticleSaveDTO();
             articleSaveDTO.setTitle(title);
@@ -50,9 +47,10 @@ public class ArticleController {
 
     @GetMapping("/{postId}")
     public ResponseEntity<ArticleResponseDTO> getPostByPostId(@PathVariable("postId") int postId) {
-        //Todo 첨부파일도 가져오도록,댓글도
-        ArticleEntity article = articleService.findByPostId(postId);
-       return null;
+        ArticleResponseDTO dto = articleService.GetArticle(postId);
+        List<CommentResponseDTO> allComment = commentService.getAllComment(postId);
+        dto.setComments(allComment);//댓글까지
+        return dto != null ? ResponseEntity.ok(dto) : ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{postId}")
@@ -66,6 +64,7 @@ public class ArticleController {
         }
 
     }
+
     @DeleteMapping("/{postId}")
     public ResponseEntity<String> delete(@PathVariable("postId") int postId, HttpSession session) {
         int memberId = (int) session.getAttribute("memberId");//유저찾

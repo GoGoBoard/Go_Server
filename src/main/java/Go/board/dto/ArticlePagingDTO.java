@@ -3,7 +3,7 @@ package Go.board.dto;
 import Go.board.entity.ArticleEntity;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 @Getter
 @Setter
@@ -14,7 +14,7 @@ public class ArticlePagingDTO {
     private int postId;
     private String title;
     private String nicknmae;
-    private LocalDateTime localDateTime;
+    private Timestamp localDateTime;
 
     public static ArticlePagingDTO toarticlePagingDTO(ArticleEntity articleEntity) {
         ArticlePagingDTO articlePagingDTO = new ArticlePagingDTO();

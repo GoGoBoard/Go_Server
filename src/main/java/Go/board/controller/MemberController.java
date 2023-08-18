@@ -23,7 +23,7 @@ public class MemberController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(LoginDTO loginDTO, HttpSession session) {
+    public ResponseEntity<String> login(@RequestBody LoginDTO loginDTO, HttpSession session) {
         MemberEntity loginMember = memberService.login(loginDTO);
 
         if (loginMember != null) {
@@ -38,7 +38,7 @@ public class MemberController {
     }
 
     @PostMapping("/join")
-    public ResponseEntity<String> register( @RequestBody @Valid RegisterDTO registerDTO) {
+    public ResponseEntity<String> register(@RequestBody @Valid RegisterDTO registerDTO) {
         boolean registerOk = memberService.registerMember(registerDTO);
         if (registerOk) {
             return ResponseEntity.ok("회원가입에 성공하였습니다.");

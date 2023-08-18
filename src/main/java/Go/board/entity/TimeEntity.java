@@ -8,13 +8,14 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-@Getter @Setter
+@Getter
+@Setter
 public class TimeEntity {
     @CreationTimestamp
-    @Column(name="write_time",updatable = false)
-    private LocalDateTime writeTime;
+    @Column(name = "write_time", updatable = false)
+    private Timestamp writeTime;
 }

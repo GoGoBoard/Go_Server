@@ -17,7 +17,6 @@ public class RegisterDTO {
 
     public static MemberEntity toEntity(RegisterDTO registerDTO) {
         MemberEntity memberEntity = new MemberEntity();
-        memberEntity.setMemberId(registerDTO.getMemberId());
         memberEntity.setLoginId(registerDTO.getLoginId());
         memberEntity.setNickname(registerDTO.getNickname());
         memberEntity.setPassword(registerDTO.getPassword());

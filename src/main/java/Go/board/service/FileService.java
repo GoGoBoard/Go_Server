@@ -17,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FileService {
     private final FileRepository fileRepository;
-    private final ArticleService articleService;
+    //private final ArticleService articleService;
 
     //파일서비스에서는 받아온 파일의 확장자를 확인하고
     //로컬에 실제 파일 저장
@@ -67,10 +67,18 @@ public class FileService {
 
     }
 
-    public List<FileEntity> getFileList(int postId) {
-        ArticleEntity article = articleService.findByPostId(postId);//article을 찾자
+    public List<FileEntity> getFileList(ArticleEntity article) {
         List<FileEntity> files = fileRepository.findAllByArticle(article);
         return files;
+    }
+
+    public List<String> getFilePathList(ArticleEntity article) {
+        List<FileEntity> fileList = getFileList(article);
+        List<String> filePathList = new ArrayList<>();
+        for (FileEntity fileEntity : fileList) {
+            filePathList.add(fileEntity.getFileName());
+        }
+        return filePathList;
     }
 
     public List<String> showFile(List<FileEntity> fileEntityList) {
