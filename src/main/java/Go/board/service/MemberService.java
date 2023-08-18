@@ -2,6 +2,7 @@ package Go.board.service;
 
 import Go.board.dto.JoinRequest;
 import Go.board.dto.LoginRequest;
+import Go.board.dto.LoginResponseDTO;
 import Go.board.entity.Member;
 import Go.board.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;

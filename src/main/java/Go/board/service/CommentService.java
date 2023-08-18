@@ -1,6 +1,7 @@
 package Go.board.service;
 
 import Go.board.dto.CommentDTO;
+import Go.board.dto.CreateCommentRequest;
 import Go.board.entity.Comment;
 import Go.board.entity.Member;
 import Go.board.entity.Post;
@@ -29,9 +30,9 @@ public class CommentService {
 
 
     // 댓글 생성
-    public CommentDTO createComment(int postId, Long memberId, String content) {
-        Optional<Post> optionalPost = postRepository.findById(postId);
-        Optional<Member> optionalMember = memberRepository.findById(memberId);
+    public CommentDTO createComment(CreateCommentRequest request) {
+        Optional<Post> optionalPost = postRepository.findById(request.getPostId());
+        Optional<Member> optionalMember = memberRepository.findById(request.getMemberId());
 
         if (optionalPost.isPresent() && optionalMember.isPresent()) {
             Post post = optionalPost.get();
@@ -40,7 +41,7 @@ public class CommentService {
             Comment comment = new Comment();
             comment.setPostId(post);
             comment.setMember_id(member);
-            comment.setContent(content);
+            comment.setContent(request.getContent());
 
             // Get the current date and time
             LocalDateTime currentTime = LocalDateTime.now();

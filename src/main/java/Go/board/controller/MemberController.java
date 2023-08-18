@@ -2,6 +2,7 @@ package Go.board.controller;
 
 import Go.board.dto.JoinRequest;
 import Go.board.dto.LoginRequest;
+import Go.board.dto.LoginResponseDTO;
 import Go.board.entity.Member;
 import Go.board.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,7 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Member> login(@RequestBody LoginRequest loginRequest,
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequest loginRequest,
                                         HttpServletRequest httpServletRequest) {
         Member member = memberService.login(loginRequest);
 
@@ -46,7 +47,9 @@ public class MemberController {
             // 세션에 userId를 넣어줌
             session.setAttribute("memberId", member.getMemberId());
             session.setMaxInactiveInterval(1800); // Session이 30분동안 유지
-            return ResponseEntity.ok(member);
+
+            LoginResponseDTO loginResponseDTO = new LoginResponseDTO(member.getNickname());
+            return ResponseEntity.ok(loginResponseDTO);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }

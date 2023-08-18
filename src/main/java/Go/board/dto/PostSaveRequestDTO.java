@@ -12,4 +12,5 @@ import lombok.Setter;
 public class PostSaveRequestDTO {
     private String title;
     private String content;
+
 }

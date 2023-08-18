@@ -25,7 +25,7 @@ public class CommentController {
 
     @PostMapping
     public ResponseEntity<CommentDTO> createComment(@RequestBody CreateCommentRequest request) {
-        CommentDTO createdComment = commentService.createComment(request.getPostId(), request.getMemberId(), request.getContent());
+        CommentDTO createdComment = commentService.createComment(request);
         if (createdComment != null) {
             return ResponseEntity.status(HttpStatus.CREATED).body(createdComment);
         } else {

@@ -37,10 +37,8 @@ public class PostService {
         return postRepository.findAll();
     }
 
-    public PostSaveRequestDTO createPost(PostDTO newPostDTO) {
-        Post newPost = modelMapper.map(newPostDTO, Post.class);
-        Post createdPost = postRepository.save(newPost);
-        return modelMapper.map(createdPost, PostSaveRequestDTO.class);
+    public PostSaveRequestDTO createPost(PostSaveRequestDTO newPostDTO) {
+
     }
 
     public Optional<PostDTO> getPostById(int postId) {
