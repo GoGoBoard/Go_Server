@@ -18,11 +18,11 @@ public class CommentEntity extends TimeEntity {
     private int commentId;
 
     //다대일 단방향
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    @ManyToOne
     @JoinColumn(name = "post_id")
     private ArticleEntity postId; // 게시글
 
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    @ManyToOne
     @JoinColumn(name = "member_id")
     private MemberEntity memberId; // 작성자
 

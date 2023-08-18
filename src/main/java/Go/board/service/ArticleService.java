@@ -4,9 +4,11 @@ import Go.board.dto.ArticlePagingDTO;
 import Go.board.dto.ArticleResponseDTO;
 import Go.board.dto.ArticleSaveDTO;
 import Go.board.entity.ArticleEntity;
+import Go.board.entity.CommentEntity;
 import Go.board.entity.FileEntity;
 import Go.board.entity.MemberEntity;
 import Go.board.repository.ArticleRepository;
+import Go.board.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,6 +31,7 @@ public class ArticleService {
     private final MemberService memberService;
     private final FileService fileService;
     private final ArticleRepository articleRepository;
+    private final CommentRepository commentRepository;
 
     public void save(ArticleSaveDTO articleSaveDTO, int memberId) throws IOException {//저장
         MemberEntity memberEntity = memberService.findMemberByMemberId(memberId);//글 주인을 찾자
@@ -83,6 +86,11 @@ public class ArticleService {
 
     public boolean delete(int postId, int memberId) {
         ArticleEntity findArticle = findByPostId(postId);
+        //댓글이 있다면 댓글 먼저 삭제하자
+        List<CommentEntity> comments = commentRepository.findAllByPostId(findArticle);
+        for (CommentEntity comment : comments) {
+            commentRepository.delete(comment);
+        }
         MemberEntity findMember = findArticle.getMember();
         if (findMember.getMemberId() != memberId) {
             return false;
