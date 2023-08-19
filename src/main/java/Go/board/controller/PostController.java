@@ -2,6 +2,7 @@ package Go.board.controller;
 
 import Go.board.dto.PostDTO;
 import Go.board.dto.PostSaveRequestDTO;
+import Go.board.dto.PostSaveResponseDTO;
 import Go.board.entity.Post;
 import Go.board.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,9 +30,12 @@ public class PostController {
     }
 
     @PostMapping()
-    public ResponseEntity<PostSaveRequestDTO> createPost(@RequestBody PostSaveRequestDTO newPostDTO) {
-        PostSaveRequestDTO createdPost = postService.createPost(newPostDTO);
-        return new ResponseEntity<>(createdPost, HttpStatus.CREATED);
+    public ResponseEntity<PostSaveResponseDTO> createPost(HttpServletRequest request, @RequestBody PostSaveRequestDTO newPostDTO) {
+        Post createdPost = postService.createPost(request,newPostDTO);
+        PostSaveResponseDTO dto = new PostSaveResponseDTO();
+        dto.setTitle(createdPost.getTitle());
+        dto.setContent(createdPost.getContent());
+        return new ResponseEntity<>(dto, HttpStatus.CREATED);
     }
 
     @GetMapping("/{articleId}")

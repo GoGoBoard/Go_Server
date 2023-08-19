@@ -1,9 +1,14 @@
 package Go.board.service;
 
+import Go.board.dto.CommentDTO;
 import Go.board.dto.PostDTO;
 import Go.board.dto.PostSaveRequestDTO;
+import Go.board.entity.Comment;
+import Go.board.entity.Member;
 import Go.board.entity.Post;
+import Go.board.repository.MemberRepository;
 import Go.board.repository.PostRepository;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,20 +16,20 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
+    private final MemberRepository memberRepository;
     private final ModelMapper modelMapper;
-
-    @Autowired
-    public PostService(PostRepository postRepository, ModelMapper modelMapper) {
-        this.postRepository = postRepository;
-        this.modelMapper = modelMapper;
-    }
 
     public List<PostDTO> getAllPostsByPage(int page) {
         int pageSize = 10;
@@ -37,7 +42,26 @@ public class PostService {
         return postRepository.findAll();
     }
 
-    public PostSaveRequestDTO createPost(PostSaveRequestDTO newPostDTO) {
+    public Post createPost(HttpServletRequest request, PostSaveRequestDTO newPostDTO) {
+        // 글을 작성하려는 작성자의 세션 정보 얻어오기
+        HttpSession session = request.getSession();
+        Long memberId = (Long)session.getAttribute("memberId");
+        Member member = memberRepository.findById(memberId).orElse(null);
+
+        Post newPost = new Post();
+        newPost.setMemberId(member);
+        newPost.setTitle(newPostDTO.getTitle());
+        newPost.setContent(newPostDTO.getContent());
+
+        // 작성 시간 설정
+        LocalDateTime currentTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedTime = currentTime.format(formatter);
+
+        newPost.setWriteTime(formattedTime);
+
+        Post createdPost = postRepository.save(newPost);
+        return createdPost;
 
     }
 
