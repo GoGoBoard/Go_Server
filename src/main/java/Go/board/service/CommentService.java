@@ -20,7 +20,7 @@ public class CommentService {
     private final ArticleService articleService;
     private final MemberService memberService;
 
-    public boolean saveComment(String content, int postId, int memberId) {
+    public CommentResponseDTO saveComment(String content, int postId, int memberId) {
         CommentEntity commentEntity = new CommentEntity();
         MemberEntity findMember = memberService.findMemberByMemberId(memberId);
         ArticleEntity findArticle = articleService.findByPostId(postId);
@@ -29,8 +29,9 @@ public class CommentService {
         commentEntity.setContent(content);
         commentEntity.setWriteTime(Timestamp.valueOf(LocalDateTime.now()));
         CommentEntity save = commentRepository.save(commentEntity);
-        if (save == null) return false;
-        return true;
+        if (save == null) return null;
+        CommentResponseDTO dto = CommentResponseDTO.toCommentResponseDTO(commentEntity);
+        return dto;
     }
 
     public CommentResponseDTO updateComment(CommentEntity comment, String content) {
@@ -40,8 +41,10 @@ public class CommentService {
         return dto;
     }
 
-    public boolean deleteComment(int commentId) {
+    public boolean deleteComment(int commentId, int memberId) {
         CommentEntity find = FindByCommentId(commentId);
+        int findMember = find.getMemberId().getMemberId();
+        if(findMember!=memberId)return false;
         commentRepository.delete(find);
         return true;
     }
@@ -56,8 +59,7 @@ public class CommentService {
         List<CommentEntity> all = commentRepository.findAllByPostId(find);
         List<CommentResponseDTO> DTOlist = new ArrayList<>(all.size());
         for (CommentEntity commentEntity : all) {
-            CommentResponseDTO dto = new CommentResponseDTO();
-            dto.toCommentResponseDTO(commentEntity);
+            CommentResponseDTO dto =CommentResponseDTO.toCommentResponseDTO(commentEntity);
             DTOlist.add(dto);
         }
         return DTOlist;

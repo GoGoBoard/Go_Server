@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
@@ -30,11 +31,12 @@ public class ArticleController {
 
     @PostMapping("")
     public ResponseEntity<String> save(
-            @ModelAttribute ArticleSaveDTO articleSaveDTO
-                                       ,HttpSession session
+            @ModelAttribute ArticleSaveDTO articleSaveDTO, HttpServletRequest request
+
     ) {
         try {
-            int memberId = (int) session.getAttribute("memberId");
+            HttpSession session = request.getSession(false);
+           int memberId = (int) session.getAttribute("memberId");
             articleService.save(articleSaveDTO, memberId);
             return ResponseEntity.ok("저장 성공");
         } catch (Exception e) {
@@ -54,9 +56,15 @@ public class ArticleController {
     @Transactional
     @PutMapping("/{postId}")
     public ResponseEntity<String> update(@PathVariable int postId
-            ,@ModelAttribute ArticleSaveDTO articleSaveDTO
+            ,@ModelAttribute ArticleSaveDTO articleSaveDTO,
+                                         HttpServletRequest request
     ) {
         try {
+            HttpSession session = request.getSession(false);
+            int memberId = (int) session.getAttribute("memberId");
+            ArticleEntity findArticle = articleService.findByPostId(postId);
+            if(findArticle.getMember().getMemberId()!=memberId)
+                return ResponseEntity.badRequest().build();//글 작성자 아니면 수정 불가
             //글 수정
             ArticleEntity update = articleService.update(postId, articleSaveDTO);
             //파일 수정
@@ -69,7 +77,8 @@ public class ArticleController {
     }
 
     @DeleteMapping("/{postId}")
-    public ResponseEntity<String> delete(@PathVariable("postId") int postId, HttpSession session) {
+    public ResponseEntity<String> delete(@PathVariable("postId") int postId,HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
         int memberId = (int) session.getAttribute("memberId");//유저찾
         boolean deleted = articleService.delete(postId, memberId);
         return deleted ? ResponseEntity.ok("삭제 성공") : ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("글 작성자만 삭제 가능");

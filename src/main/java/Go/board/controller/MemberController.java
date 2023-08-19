@@ -29,7 +29,9 @@ public class MemberController {
         if (loginMember != null) {
             //로그인 성공, 세션이 있으면 있는 세션 반환, 없으면 신규 세션 생성
             session.setAttribute("memberId", loginMember.getMemberId());
+
             session.setMaxInactiveInterval(1800);//30분 유지
+            System.out.println(session.getAttribute("memberId"));
             return ResponseEntity.ok("로그인 성공");
         } else {
             //로그인 실패처리

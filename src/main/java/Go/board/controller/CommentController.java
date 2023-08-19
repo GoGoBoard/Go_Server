@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
@@ -24,18 +25,23 @@ public class CommentController {
     }
 
     @PostMapping("/{postId}")
-    public ResponseEntity saveComment(@PathVariable int postId, @RequestBody String content, HttpSession session) {
+    public ResponseEntity<CommentResponseDTO> saveComment(@PathVariable int postId, @RequestBody String content, HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
         int memberId = (int) session.getAttribute("memberId");//댓글 작성자
-        boolean saved = commentService.saveComment(content, postId, memberId);
-        return saved ? ResponseEntity.ok("댓글 저장 성공") : ResponseEntity.badRequest().build();
+        CommentResponseDTO dto = commentService.saveComment(content, postId, memberId);
+        return dto!=null ? ResponseEntity.ok(dto) : ResponseEntity.badRequest().build();
     }
 
     @Transactional // 따로 save하지 않아도 db수정됨(더티체킹)
     @PutMapping("/{commentId}")
-    public ResponseEntity<CommentResponseDTO> updateComment(@PathVariable int commentId, @RequestBody String content) {
+    public ResponseEntity<CommentResponseDTO> updateComment(@PathVariable int commentId, @RequestBody String content,
+                                                            HttpServletRequest request) {
 
         try {
+            HttpSession session = request.getSession(false);
+            int memberId = (int) session.getAttribute("memberId");
             CommentEntity find = commentService.FindByCommentId(commentId);
+            if(find.getMemberId().getMemberId()!=memberId) return ResponseEntity.badRequest().build();//작성자만 수정 가능
             CommentResponseDTO responseDTO = commentService.updateComment(find, content);
             return ResponseEntity.ok(responseDTO);
         } catch (Exception e) {
@@ -44,9 +50,10 @@ public class CommentController {
     }
 
     @DeleteMapping("/{commentId}")
-    public ResponseEntity deleteComment(@PathVariable int commentId) {
-        //Todo Cannot delete or update a parent row: a foreign key constraint fails 에러
-        boolean deleted = commentService.deleteComment(commentId);
+    public ResponseEntity deleteComment(@PathVariable int commentId,HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        int memberId = (int) session.getAttribute("memberId");
+        boolean deleted = commentService.deleteComment(commentId,memberId);
         return deleted ? ResponseEntity.ok().build() : ResponseEntity.badRequest().build();
 
     }
