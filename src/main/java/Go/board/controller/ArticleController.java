@@ -4,16 +4,18 @@ import Go.board.dto.ArticlePagingDTO;
 import Go.board.dto.ArticleResponseDTO;
 import Go.board.dto.ArticleSaveDTO;
 import Go.board.dto.CommentResponseDTO;
+import Go.board.entity.ArticleEntity;
 import Go.board.service.ArticleService;
 import Go.board.service.CommentService;
+import Go.board.service.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -24,18 +26,14 @@ import java.util.List;
 public class ArticleController {
     private final ArticleService articleService;
     private final CommentService commentService;
+    private final FileService fileService;
 
     @PostMapping("")
-    public ResponseEntity<String> save(@RequestParam(name = "title") String title,
-                                       @RequestParam(name = "content") String content,
-                                       @RequestPart(name = "files") List<MultipartFile> files,
-                                       HttpSession session
+    public ResponseEntity<String> save(
+            @ModelAttribute ArticleSaveDTO articleSaveDTO
+                                       ,HttpSession session
     ) {
         try {
-            ArticleSaveDTO articleSaveDTO = new ArticleSaveDTO();
-            articleSaveDTO.setTitle(title);
-            articleSaveDTO.setContent(content);
-            articleSaveDTO.setFiles(files);
             int memberId = (int) session.getAttribute("memberId");
             articleService.save(articleSaveDTO, memberId);
             return ResponseEntity.ok("저장 성공");
@@ -53,12 +51,17 @@ public class ArticleController {
         return dto != null ? ResponseEntity.ok(dto) : ResponseEntity.noContent().build();
     }
 
+    @Transactional
     @PutMapping("/{postId}")
-    public ResponseEntity<String> update(ArticleSaveDTO articleSaveDTO) {
+    public ResponseEntity<String> update(@PathVariable int postId
+            ,@ModelAttribute ArticleSaveDTO articleSaveDTO
+    ) {
         try {
-            //Todo
-            // articleService.save(articleResponseDTO);
-            return ResponseEntity.ok("");
+            //글 수정
+            ArticleEntity update = articleService.update(postId, articleSaveDTO);
+            //파일 수정
+            fileService.updateFile(update, articleSaveDTO.getFiles());
+            return ResponseEntity.ok("수정 성공");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("저장 실패");
         }

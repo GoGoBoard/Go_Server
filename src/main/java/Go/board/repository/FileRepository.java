@@ -10,5 +10,6 @@ import java.util.List;
 @Repository
 public interface FileRepository extends JpaRepository<FileEntity, Integer> {
     List<FileEntity> findAllByArticle(ArticleEntity article);
+    void deleteAllByArticle(ArticleEntity article);
 
 }

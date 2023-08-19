@@ -15,7 +15,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -45,15 +44,6 @@ public class ArticleService {
         articleRepository.save(articleEntity);
     }
 
-    public Optional<List<ArticleResponseDTO>> findAll() {
-        List<ArticleEntity> articleEntityList = articleRepository.findAll();
-        List<ArticleResponseDTO> articleResponseDTOList = new ArrayList<>();
-        for (ArticleEntity articleEntity : articleEntityList) {
-            articleResponseDTOList.add(ArticleResponseDTO.toarticleResponseDTO(articleEntity));
-        }
-        return Optional.of(articleResponseDTOList);
-    }
-
     public ArticleResponseDTO GetArticle(int postId) {//게시글 상세조회
         Optional<ArticleEntity> articleEntity = articleRepository.findById(postId);
         if (articleEntity.isPresent()) {
@@ -72,16 +62,12 @@ public class ArticleService {
         } else return null;
     }
 
-    public void update(int postId, ArticleSaveDTO articleSaveDTO) throws IOException {
+    public ArticleEntity update(int postId, ArticleSaveDTO articleSaveDTO) throws IOException {
         //글을 찾자
         ArticleEntity findArticle = articleRepository.findByPostId(postId);
         findArticle.setTitle(articleSaveDTO.getTitle());
         findArticle.setContent(articleSaveDTO.getContent());//제목,내용 수정
-
-        List<MultipartFile> newfiles = articleSaveDTO.getFiles();
-        List<FileEntity> oldfiles = findArticle.getFiles();
-        //기존 파일과 신규 파일 구분해서 다시 저장
-        //  fileService.updateFile(oldfiles, newfiles);
+        return findArticle;
     }
 
     public boolean delete(int postId, int memberId) {

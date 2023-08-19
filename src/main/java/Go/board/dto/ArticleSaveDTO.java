@@ -15,5 +15,4 @@ public class ArticleSaveDTO {
     private String content;
     private List<MultipartFile> files;
 
-
 }

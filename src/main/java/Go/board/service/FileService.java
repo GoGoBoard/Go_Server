@@ -17,7 +17,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FileService {
     private final FileRepository fileRepository;
-    //private final ArticleService articleService;
 
     //파일서비스에서는 받아온 파일의 확장자를 확인하고
     //로컬에 실제 파일 저장
@@ -81,15 +80,6 @@ public class FileService {
         return filePathList;
     }
 
-    public List<String> showFile(List<FileEntity> fileEntityList) {
-        List<String> filePathList = new ArrayList<>();
-        for (FileEntity fileEntity : fileEntityList) {
-            String filePath = fileEntity.getFileName();
-            filePathList.add(filePath);
-        }
-        return filePathList;
-    }
-
     public void saveFile(List<FileEntity> files, ArticleEntity articleEntity) {
         for (FileEntity file : files) {
             file.setArticle(articleEntity);
@@ -97,27 +87,15 @@ public class FileService {
         }
     }
 
-    public List<String> getOriginFileNameList(List<FileEntity> fileEntityList) {
-        List<String> nameList = new ArrayList<>();
-        for (FileEntity fileEntity : fileEntityList) {
-            String url = fileEntity.getUrl();
-            nameList.add(url.substring(0, url.length() - 3));//확장자 제거
-        }
-        return nameList;
+    public void updateFile(ArticleEntity article, List<MultipartFile> files) throws IOException {
+        //삭제하고 새로 다시 넣자?
+        fileRepository.deleteAllByArticle(article);
+        List<FileEntity> fileEntityList = handleFile(files);
+        if (fileEntityList != null)
+            saveFile(fileEntityList, article);
+
     }
 
-    public void updateFile(List<FileEntity> oldfiles, List<MultipartFile> newfiles) throws IOException {
-        if (oldfiles.isEmpty()) {//기존에 파일이 없던 경우
-            List<FileEntity> fileEntityList = handleFile(newfiles);
-        }
-        if (newfiles.isEmpty()) {//첨부파일 다 지운 경우
-            fileRepository.deleteAll();
-        } else {//수정사항 있는 경우
-            for (MultipartFile newfile : newfiles) {
-
-            }
-        }
-    }
     //파일리스트 전체 조회
     //파일리스트 대조 후 추가
     //파일리스트 대조 후 삭제

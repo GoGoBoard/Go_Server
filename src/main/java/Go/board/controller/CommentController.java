@@ -30,7 +30,7 @@ public class CommentController {
         return saved ? ResponseEntity.ok("댓글 저장 성공") : ResponseEntity.badRequest().build();
     }
 
-    @Transactional // 따로 save하지 않아도 db수정됨
+    @Transactional // 따로 save하지 않아도 db수정됨(더티체킹)
     @PutMapping("/{commentId}")
     public ResponseEntity<CommentResponseDTO> updateComment(@PathVariable int commentId, @RequestBody String content) {
 
