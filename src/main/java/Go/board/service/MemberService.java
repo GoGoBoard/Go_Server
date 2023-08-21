@@ -1,6 +1,7 @@
 package Go.board.service;
 
 import Go.board.dto.LoginDTO;
+import Go.board.dto.MemberResponseDTO;
 import Go.board.dto.RegisterDTO;
 import Go.board.entity.MemberEntity;
 import Go.board.repository.MemberRepository;
@@ -28,21 +29,22 @@ public class MemberService {
         MemberEntity findMemberEntity = findMemberByLoginId(loginDTO.getLoginId());
         if (findMemberEntity != null) {
             String encodePW = findMemberEntity.getPassword();
-            if (passwordEncoder.matches(loginDTO.getPassword(), encodePW))
+            if (passwordEncoder.matches(loginDTO.getPassword(), encodePW)) {
                 return findMemberEntity;
+            }
             else return null;
         } else return null;
     }
 
-    public boolean registerMember(RegisterDTO registerDTO) {
+    public MemberResponseDTO registerMember(RegisterDTO registerDTO) {
         MemberEntity findMemberEntity = findMemberByLoginId(registerDTO.getLoginId());
         if (findMemberEntity != null) {//해당 로그인아이디 존재
-            return false;
+            return null;
         } else {
             String password = registerDTO.getPassword();
             registerDTO.setPassword(passwordEncoder.encode(password));
-            memberRepository.save(RegisterDTO.toEntity(registerDTO));
-            return true;
+            MemberEntity save = memberRepository.save(RegisterDTO.toEntity(registerDTO));
+            return MemberResponseDTO.toMemberResponseDTO(save);
         }
 
     }

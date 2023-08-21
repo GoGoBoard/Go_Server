@@ -13,13 +13,13 @@ import java.sql.Timestamp;
 public class CommentResponseDTO {
     private String nickname;
     private String content;
-    private Timestamp localDateTime;
+    private Timestamp writeTime;
 
     public static CommentResponseDTO toCommentResponseDTO(CommentEntity commentEntity){
         CommentResponseDTO dto = new CommentResponseDTO();
         dto.setNickname(commentEntity.getMemberId().getNickname());
         dto.setContent(commentEntity.getContent());
-        dto.setLocalDateTime(commentEntity.getWriteTime());
+        dto.setWriteTime(commentEntity.getWriteTime());
 
         return dto;
     }
