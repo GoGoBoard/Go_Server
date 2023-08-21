@@ -41,11 +41,11 @@ jobs:
         gradle-version: 8.2.1
         arguments: build
 
-    - name: Upload to the EC2 instance
-      uses: wangyucode/sftp-upload-action@v2.0.2
+    - name: Deploy to the EC2 instance
+      uses: easingthemes/ssh-deploy@main
       with:
-        host: ${{ secrets.EC2_HOST }} 
-        username: ${{ secrets.EC2_USER }} 
-        privateKey: ${{ secrets.EC2_SSH_PEM }} 
-        localDir: 'build/libs'
-        remoteDir: '/home/ubuntu/jars'
+        REMOTE_HOST: ${{ secrets.EC2_HOST }} 
+        REMOTE_USER: ${{ secrets.EC2_USER }} 
+        SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_PEM }} 
+        SOURCE: 'build/libs'
+        TARGET: '/home/ubuntu/jars'
