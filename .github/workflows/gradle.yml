@@ -45,6 +45,7 @@ jobs:
       uses: wangyucode/sftp-upload-action@v2.0.2
       with:
         host: '52.79.65.54'
+        username: ubuntu
         privateKey: ${{ secrets.EC2_SSH_PEM }} 
         localDir: 'build/libs'
         remoteDir: '/home/ubuntu/jars'
