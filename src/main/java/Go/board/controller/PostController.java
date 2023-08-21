@@ -1,12 +1,12 @@
 package Go.board.controller;
 
-import Go.board.dto.PostAllResponse;
-import Go.board.dto.PostOneResponse;
-import Go.board.dto.PostSaveRequestDTO;
-import Go.board.dto.PostSaveResponseDTO;
+import Go.board.dto.*;
 import Go.board.entity.Post;
 import Go.board.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,10 +21,10 @@ import java.util.Optional;
 public class PostController {
     private final PostService postService;
 
-    @GetMapping() // 비정상 작동
-    public ResponseEntity<List<PostAllResponse>> getAllPosts(@RequestParam(defaultValue = "1") int p) {
-        List<PostAllResponse> posts = postService.getAllPostsByPage(p);
-        return ResponseEntity.ok(posts);
+    @GetMapping("/paging")//article/paging?page=1
+    public ResponseEntity<ArticlePagingResponse> paging(@PageableDefault(page = 1) Pageable pageable) {
+        ArticlePagingResponse pagingResponse = postService.paging(pageable);
+        return ResponseEntity.ok(pagingResponse);
     }
 
     @PostMapping() // 정상 작동

@@ -1,9 +1,6 @@
 package Go.board.service;
 
-import Go.board.dto.CommentResponse;
-import Go.board.dto.PostAllResponse;
-import Go.board.dto.PostOneResponse;
-import Go.board.dto.PostSaveRequestDTO;
+import Go.board.dto.*;
 import Go.board.entity.Comment;
 import Go.board.entity.Member;
 import Go.board.entity.Post;
@@ -14,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,12 +31,17 @@ public class PostService {
     private final ModelMapper modelMapper;
     private final CommentService commentService;
 
-    public List<PostAllResponse> getAllPostsByPage(int page) {
-        int pageSize = 10;
-        Page<Post> postPage = postRepository.findAll(PageRequest.of(page - 1, pageSize));
-        return postPage.getContent().stream()
-                .map(post -> modelMapper.map(post, PostAllResponse.class))
-                .collect(Collectors.toList());    }
+    public ArticlePagingResponse paging(Pageable pageable) {
+        int page = pageable.getPageNumber() - 1;//페이지 위치에 있는 값은 0부터 시작 like배열
+        int pageLimit = 6; //한 페이지에 보여줄 개수
+        //한 페이지 당 6개씩 글을 보여주고 정렬기준은 id기준으로 내림차순 정렬
+        Page<Post> postEntities =
+                postRepository.findAll(PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "postId")));
+        List<ArticlePaging> articleDTOS = postEntities.getContent().stream()
+                .map(ArticlePaging::toarticlePagingDTO)
+                .collect(Collectors.toList());
+        return new ArticlePagingResponse(articleDTOS);
+    }
 
     public List<Post> getAllPosts() {
         return postRepository.findAll();
