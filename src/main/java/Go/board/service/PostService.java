@@ -1,20 +1,20 @@
 package Go.board.service;
 
-import Go.board.dto.CommentDTO;
-import Go.board.dto.PostDTO;
+import Go.board.dto.CommentResponse;
+import Go.board.dto.PostAllResponse;
+import Go.board.dto.PostOneResponse;
 import Go.board.dto.PostSaveRequestDTO;
 import Go.board.entity.Comment;
 import Go.board.entity.Member;
 import Go.board.entity.Post;
+import Go.board.repository.CommentRepository;
 import Go.board.repository.MemberRepository;
 import Go.board.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -30,12 +30,13 @@ public class PostService {
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
     private final ModelMapper modelMapper;
+    private final CommentService commentService;
 
-    public List<PostDTO> getAllPostsByPage(int page) {
+    public List<PostAllResponse> getAllPostsByPage(int page) {
         int pageSize = 10;
         Page<Post> postPage = postRepository.findAll(PageRequest.of(page - 1, pageSize));
         return postPage.getContent().stream()
-                .map(post -> modelMapper.map(post, PostDTO.class))
+                .map(post -> modelMapper.map(post, PostAllResponse.class))
                 .collect(Collectors.toList());    }
 
     public List<Post> getAllPosts() {
@@ -65,9 +66,17 @@ public class PostService {
 
     }
 
-    public Optional<PostDTO> getPostById(int postId) {
-        Optional<Post> optionalPost = postRepository.findById(postId);
-        return optionalPost.map(post -> modelMapper.map(post, PostDTO.class));
+    public PostOneResponse getPostById(int postId) {
+        Optional<Post> optionalPost = postRepository.findById(postId); // 게시글 정보 가져오기
+
+        List<CommentResponse> comments = commentService.getAllComment(postId); // 여기서 계속 오류가 발생함
+
+        if (optionalPost.isPresent()) {
+            Post getPost = optionalPost.get();
+            PostOneResponse dto = PostOneResponse.toDTO(getPost);
+            dto.setComments(comments);
+            return dto;
+        } else return null;
     }
 
     public boolean deletePostById(int postId) {
@@ -78,18 +87,18 @@ public class PostService {
         return false;
     }
 
-    public PostDTO updatePost(int postId, PostDTO updatedPostDTO) {
+    public PostAllResponse updatePost(int postId, PostAllResponse updatedPostAllResponse) {
         Optional<Post> optionalPost = postRepository.findById(postId);
         if (optionalPost.isPresent()) {
             Post existingPost = optionalPost.get();
-            modelMapper.map(updatedPostDTO, existingPost);
+            modelMapper.map(updatedPostAllResponse, existingPost);
             Post updatedPost = postRepository.save(existingPost);
-            return modelMapper.map(updatedPost, PostDTO.class);
+            return modelMapper.map(updatedPost, PostAllResponse.class);
         }
         return null;
     }
 
-    public PostDTO partialUpdatePost(int postId, PostDTO updatedFieldsDTO) {
+    public PostAllResponse partialUpdatePost(int postId, PostAllResponse updatedFieldsDTO) {
         Optional<Post> optionalPost = postRepository.findById(postId);
         if (optionalPost.isPresent()) {
             Post existingPost = optionalPost.get();
@@ -104,7 +113,7 @@ public class PostService {
             }
             // Save the updated post
             Post updatedPost = postRepository.save(existingPost);
-            return modelMapper.map(updatedPost, PostDTO.class); // Map entity to DTO
+            return modelMapper.map(updatedPost, PostAllResponse.class); // Map entity to DTO
         }
         return null;
     }

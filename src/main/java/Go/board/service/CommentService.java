@@ -1,6 +1,6 @@
 package Go.board.service;
 
-import Go.board.dto.CommentDTO;
+import Go.board.dto.CommentResponse;
 import Go.board.dto.CommentCreateRequest;
 import Go.board.entity.Comment;
 import Go.board.entity.Member;
@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -31,7 +32,7 @@ public class CommentService {
 
 
     // 댓글 생성
-    public CommentDTO createComment(HttpServletRequest request, int postId, CommentCreateRequest dto) {
+    public CommentResponse createComment(HttpServletRequest request, int postId, CommentCreateRequest dto) {
 
         // 댓글 입력하는 사용자 세션 정보 가져오기
         HttpSession session = request.getSession();
@@ -54,20 +55,21 @@ public class CommentService {
         comment.setWrite_time(formattedTime);
 
         Comment createdComment = commentRepository.save(comment);
-        return CommentDTO.toDto(createdComment);
+        return CommentResponse.toDto(createdComment);
     }
 
     // 글에 해당하는 전체 댓글 불러오기
     @Transactional(readOnly = true)
-    public List<CommentDTO> getCommentsByPostId(int postId) {
-        List<Comment> comments = commentRepository.findAllByPostId(postId);
+    public List<CommentResponse> getCommentsByPostId(int postId) {
+        Post post = postRepository.findById(postId).orElse(null);
+        List<Comment> comments = commentRepository.findAllByPostId(post);
         return comments.stream()
-                .map(CommentDTO::toDto)
+                .map(CommentResponse::toDto)
                 .collect(Collectors.toList());
     }
 
     // 댓글 수정
-    public CommentDTO updateComment(Long commentId, String updatedContent) {
+    public CommentResponse updateComment(Long commentId, String updatedContent) {
         Optional<Comment> optionalComment = commentRepository.findById(commentId);
 
         if (optionalComment.isPresent()) {
@@ -75,7 +77,7 @@ public class CommentService {
             comment.setContent(updatedContent);
 
             Comment updatedComment = commentRepository.save(comment);
-            return CommentDTO.toDto(updatedComment);
+            return CommentResponse.toDto(updatedComment);
         }
         return null; // Comment not found
     }
@@ -88,6 +90,17 @@ public class CommentService {
             return true;
         }
         return false; // Comment not found
+    }
+
+    public List<CommentResponse> getAllComment(int postId) {
+        Post post = postRepository.findById(postId).orElse(null);
+        List<Comment> all = commentRepository.findAllByPostId(post);
+        List<CommentResponse> dtoList = new ArrayList<>(all.size());
+        for (Comment comment : all) {
+            CommentResponse dto = CommentResponse.toDto(comment);
+            dtoList.add(dto);
+        }
+        return dtoList;
     }
 }
 

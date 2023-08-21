@@ -1,14 +1,12 @@
 package Go.board.controller;
 
-import Go.board.dto.PostDTO;
+import Go.board.dto.PostAllResponse;
+import Go.board.dto.PostOneResponse;
 import Go.board.dto.PostSaveRequestDTO;
 import Go.board.dto.PostSaveResponseDTO;
 import Go.board.entity.Post;
 import Go.board.service.PostService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,12 +22,12 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping() // 비정상 작동
-    public ResponseEntity<List<PostDTO>> getAllPosts(@RequestParam(defaultValue = "1") int p) {
-        List<PostDTO> posts = postService.getAllPostsByPage(p);
+    public ResponseEntity<List<PostAllResponse>> getAllPosts(@RequestParam(defaultValue = "1") int p) {
+        List<PostAllResponse> posts = postService.getAllPostsByPage(p);
         return ResponseEntity.ok(posts);
     }
 
-    @PostMapping()
+    @PostMapping() // 정상 작동
     public ResponseEntity<PostSaveResponseDTO> createPost(HttpServletRequest request, @RequestBody PostSaveRequestDTO newPostDTO) {
         Post createdPost = postService.createPost(request,newPostDTO);
         PostSaveResponseDTO dto = new PostSaveResponseDTO();
@@ -39,9 +37,9 @@ public class PostController {
     }
 
     @GetMapping("/{articleId}") // 비정상 작동
-    public ResponseEntity<PostDTO> getPostById(@PathVariable int articleId) {
-        Optional<PostDTO> optionalPost = postService.getPostById(articleId);
-        return optionalPost.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<PostOneResponse> getPostById(@PathVariable int articleId) {
+        PostOneResponse dto = postService.getPostById(articleId);
+        return ResponseEntity.ok(dto);
     }
 
     @DeleteMapping("/{articleId}")
@@ -51,14 +49,14 @@ public class PostController {
     }
 
     @PutMapping("/{articleId}")
-    public ResponseEntity<PostDTO> updatePost(@PathVariable int articleId, @RequestBody PostDTO updatedPostDTO) {
-        PostDTO postDTO = postService.updatePost(articleId, updatedPostDTO);
-        return postDTO != null ? ResponseEntity.ok(postDTO) : ResponseEntity.notFound().build();
+    public ResponseEntity<PostAllResponse> updatePost(@PathVariable int articleId, @RequestBody PostAllResponse updatedPostAllResponse) {
+        PostAllResponse postAllResponse = postService.updatePost(articleId, updatedPostAllResponse);
+        return postAllResponse != null ? ResponseEntity.ok(postAllResponse) : ResponseEntity.notFound().build();
     }
 
     @PatchMapping("/{articleId}")
-    public ResponseEntity<PostDTO> partialUpdatePost(@PathVariable int articleId, @RequestBody PostDTO updatedFieldsDTO) {
-        PostDTO postDTO = postService.partialUpdatePost(articleId, updatedFieldsDTO);
-        return postDTO != null ? ResponseEntity.ok(postDTO) : ResponseEntity.notFound().build();
+    public ResponseEntity<PostAllResponse> partialUpdatePost(@PathVariable int articleId, @RequestBody PostAllResponse updatedFieldsDTO) {
+        PostAllResponse postAllResponse = postService.partialUpdatePost(articleId, updatedFieldsDTO);
+        return postAllResponse != null ? ResponseEntity.ok(postAllResponse) : ResponseEntity.notFound().build();
     }
 }

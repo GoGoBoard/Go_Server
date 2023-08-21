@@ -6,14 +6,14 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommentDTO {
+public class CommentResponse {
     private String nickname;
     private String content;
     private String write_time;
 
 
-    public static CommentDTO toDto(Comment comment) {
-        return new CommentDTO(
+    public static CommentResponse toDto(Comment comment) {
+        return new CommentResponse(
                 comment.getMember_id().getNickname(),
                 comment.getContent(),
                 comment.getWrite_time()

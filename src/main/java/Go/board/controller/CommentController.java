@@ -1,9 +1,10 @@
 package Go.board.controller;
 
-import Go.board.dto.CommentDTO;
+import Go.board.dto.CommentResponse;
 import Go.board.dto.CommentCreateRequest;
 import Go.board.dto.UpdateCommentRequest;
 import Go.board.service.CommentService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,19 +14,15 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/comment")
 public class CommentController {
 
     private final CommentService commentService;
 
-    @Autowired
-    public CommentController(CommentService commentService) {
-        this.commentService = commentService;
-    }
-
     @PostMapping("/{postId}")
-    public ResponseEntity<CommentDTO> createComment(HttpServletRequest request, @PathVariable int postId, @RequestBody CommentCreateRequest dto) {
-        CommentDTO createdComment = commentService.createComment(request, postId, dto);
+    public ResponseEntity<CommentResponse> createComment(HttpServletRequest request, @PathVariable int postId, @RequestBody CommentCreateRequest dto) {
+        CommentResponse createdComment = commentService.createComment(request, postId, dto);
         if (createdComment != null) {
             return ResponseEntity.status(HttpStatus.CREATED).body(createdComment);
         } else {
@@ -33,15 +30,16 @@ public class CommentController {
         }
     }
 
-    @GetMapping("/{postId}")
-    public ResponseEntity<List<CommentDTO>> getCommentsByPostId(@PathVariable int postId) {
-        List<CommentDTO> comments = commentService.getCommentsByPostId(postId);
+    @GetMapping("/{postId}") // Post GET요청과 같은 오류 발생
+    // IllegalArgumentException: Parameter value [61] did not match expected type [Go.board.entity.Post (n/a)]
+    public ResponseEntity<List<CommentResponse>> getCommentsByPostId(@PathVariable int postId) {
+        List<CommentResponse> comments = commentService.getCommentsByPostId(postId);
         return ResponseEntity.ok(comments);
     }
 
-    @PutMapping("/{commentId}")
-    public ResponseEntity<CommentDTO> updateComment(@PathVariable Long commentId, @RequestBody UpdateCommentRequest request) {
-        CommentDTO updatedComment = commentService.updateComment(commentId, request.getContent());
+    @PutMapping("/{commentId}") // 정상 작동
+    public ResponseEntity<CommentResponse> updateComment(@PathVariable Long commentId, @RequestBody UpdateCommentRequest request) {
+        CommentResponse updatedComment = commentService.updateComment(commentId, request.getContent());
         if (updatedComment != null) {
             return ResponseEntity.ok(updatedComment);
         } else {
@@ -49,7 +47,7 @@ public class CommentController {
         }
     }
 
-    @DeleteMapping("/{commentId}")
+    @DeleteMapping("/{commentId}") // 정상 작동
     public ResponseEntity<Void> deleteComment(@PathVariable Long commentId) {
         boolean deleted = commentService.deleteComment(commentId);
         return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
