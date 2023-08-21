@@ -7,14 +7,14 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CommentDTO {
-    private Long comment_id;
+    private String nickname;
     private String content;
     private String write_time;
 
 
     public static CommentDTO toDto(Comment comment) {
         return new CommentDTO(
-                comment.getComment_id(),
+                comment.getMember_id().getNickname(),
                 comment.getContent(),
                 comment.getWrite_time()
         );
