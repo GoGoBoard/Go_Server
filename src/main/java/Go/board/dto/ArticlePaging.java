@@ -12,9 +12,11 @@ public class ArticlePaging{
     private String title;
     private String nickname;
     private String writeTime;
+    private int postId;
 
     public static ArticlePaging toarticlePagingDTO(Post post) {
         ArticlePaging articlePagingDTO = new ArticlePaging();
+        articlePagingDTO.postId = post.getPostId();
         articlePagingDTO.title = post.getTitle();
         articlePagingDTO.writeTime = post.getWriteTime();
         articlePagingDTO.nickname = post.getMemberId().getNickname();
