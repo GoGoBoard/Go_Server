@@ -30,6 +30,7 @@ jobs:
         distribution: 'temurin'
     - name: Inject application.yml
       run: |
+        mkdir -p ${{ github.workspace }}/src/main/resources && 
         echo $APPLICATION_YML_TEXT >> ${{ github.workspace }}/src/main/resources/application.yml
       env:
         APPLICATION_YML_TEXT: ${{ secrets.APPLICATION_YML_TEXT }}
