@@ -1,15 +1,15 @@
 package Go.board.controller;
 
 import Go.board.dto.CommentDTO;
-import Go.board.dto.CreateCommentRequest;
+import Go.board.dto.CommentCreateRequest;
 import Go.board.dto.UpdateCommentRequest;
 import Go.board.service.CommentService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -23,9 +23,9 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-    @PostMapping
-    public ResponseEntity<CommentDTO> createComment(@RequestBody CreateCommentRequest request) {
-        CommentDTO createdComment = commentService.createComment(request);
+    @PostMapping("/{postId}")
+    public ResponseEntity<CommentDTO> createComment(HttpServletRequest request, @PathVariable int postId, @RequestBody CommentCreateRequest dto) {
+        CommentDTO createdComment = commentService.createComment(request, postId, dto);
         if (createdComment != null) {
             return ResponseEntity.status(HttpStatus.CREATED).body(createdComment);
         } else {

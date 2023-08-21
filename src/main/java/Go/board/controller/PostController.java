@@ -23,7 +23,7 @@ import java.util.Optional;
 public class PostController {
     private final PostService postService;
 
-    @GetMapping()
+    @GetMapping() // 비정상 작동
     public ResponseEntity<List<PostDTO>> getAllPosts(@RequestParam(defaultValue = "1") int p) {
         List<PostDTO> posts = postService.getAllPostsByPage(p);
         return ResponseEntity.ok(posts);
@@ -38,7 +38,7 @@ public class PostController {
         return new ResponseEntity<>(dto, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{articleId}")
+    @GetMapping("/{articleId}") // 비정상 작동
     public ResponseEntity<PostDTO> getPostById(@PathVariable int articleId) {
         Optional<PostDTO> optionalPost = postService.getPostById(articleId);
         return optionalPost.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());

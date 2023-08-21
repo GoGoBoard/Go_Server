@@ -1,7 +1,7 @@
 package Go.board.service;
 
 import Go.board.dto.CommentDTO;
-import Go.board.dto.CreateCommentRequest;
+import Go.board.dto.CommentCreateRequest;
 import Go.board.entity.Comment;
 import Go.board.entity.Member;
 import Go.board.entity.Post;
@@ -12,9 +12,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -30,30 +31,30 @@ public class CommentService {
 
 
     // 댓글 생성
-    public CommentDTO createComment(CreateCommentRequest request) {
-        Optional<Post> optionalPost = postRepository.findById(request.getPostId());
-        Optional<Member> optionalMember = memberRepository.findById(request.getMemberId());
+    public CommentDTO createComment(HttpServletRequest request, int postId, CommentCreateRequest dto) {
 
-        if (optionalPost.isPresent() && optionalMember.isPresent()) {
-            Post post = optionalPost.get();
-            Member member = optionalMember.get();
+        // 댓글 입력하는 사용자 세션 정보 가져오기
+        HttpSession session = request.getSession();
+        Long memberId = (Long) session.getAttribute("memberId");
+        Member member = memberRepository.findById(memberId).orElse(null);
 
-            Comment comment = new Comment();
-            comment.setPostId(post);
-            comment.setMember_id(member);
-            comment.setContent(request.getContent());
+        // postId 이용해서 Post 객체 받아오기
+        Post post = postRepository.findById(postId).orElse(null);
 
-            // Get the current date and time
-            LocalDateTime currentTime = LocalDateTime.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            String formattedTime = currentTime.format(formatter);
+        Comment comment = new Comment();
+        comment.setPostId(post);
+        comment.setMember_id(member);
+        comment.setContent(dto.getContent());
 
-            comment.setWrite_time(formattedTime);
+        // Get the current date and time
+        LocalDateTime currentTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedTime = currentTime.format(formatter);
 
-            Comment createdComment = commentRepository.save(comment);
-            return CommentDTO.toDto(createdComment);
-        }
-        return null; // Post or Member not found
+        comment.setWrite_time(formattedTime);
+
+        Comment createdComment = commentRepository.save(comment);
+        return CommentDTO.toDto(createdComment);
     }
 
     // 글에 해당하는 전체 댓글 불러오기
