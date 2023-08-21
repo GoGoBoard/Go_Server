@@ -44,8 +44,8 @@ jobs:
     - name: Upload to the EC2 instance
       uses: wangyucode/sftp-upload-action@v2.0.2
       with:
-        host: '52.79.65.54'
-        username: ubuntu
+        host: ${{ secrets.EC2_HOST }} 
+        username: ${{ secrets.EC2_USER }} 
         privateKey: ${{ secrets.EC2_SSH_PEM }} 
         localDir: 'build/libs'
         remoteDir: '/home/ubuntu/jars'
