@@ -20,7 +20,7 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @PostMapping("/{postId}")
+    @PostMapping("/{postId}") // 정상 작동
     public ResponseEntity<CommentResponse> createComment(HttpServletRequest request, @PathVariable int postId, @RequestBody CommentCreateRequest dto) {
         CommentResponse createdComment = commentService.createComment(request, postId, dto);
         if (createdComment != null) {
@@ -30,8 +30,7 @@ public class CommentController {
         }
     }
 
-    @GetMapping("/{postId}") // Post GET요청과 같은 오류 발생
-    // IllegalArgumentException: Parameter value [61] did not match expected type [Go.board.entity.Post (n/a)]
+    @GetMapping("/{postId}") // 정상 작동
     public ResponseEntity<List<CommentResponse>> getCommentsByPostId(@PathVariable int postId) {
         List<CommentResponse> comments = commentService.getCommentsByPostId(postId);
         return ResponseEntity.ok(comments);

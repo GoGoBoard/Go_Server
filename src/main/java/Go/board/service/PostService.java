@@ -69,7 +69,7 @@ public class PostService {
     public PostOneResponse getPostById(int postId) {
         Optional<Post> optionalPost = postRepository.findById(postId); // 게시글 정보 가져오기
 
-        List<CommentResponse> comments = commentService.getAllComment(postId); // 여기서 계속 오류가 발생함
+        List<CommentResponse> comments = commentService.getAllComment(postId); // 해당 게시글 댓글들 가져오기
 
         if (optionalPost.isPresent()) {
             Post getPost = optionalPost.get();
