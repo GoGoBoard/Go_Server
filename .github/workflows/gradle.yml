@@ -25,7 +25,7 @@ jobs:
     - uses: actions/checkout@v3
     - name: Inject application.yml
       run: |
-        echo $APPLICATION_YML_TEXT >> ./src/main/resources/application.yml
+        echo $APPLICATION_YML_TEXT >> ${{ github.workspace }}/src/main/resources/application.yml
       shell: bash
       env:
         APPLICATION_YML_TEXT : ${{secrets.APPLICATION_YML_TEXT}}
