@@ -20,7 +20,7 @@ public class Post {
     @Column(name = "content")
     private String content;
     @Column(name = "write_time")
-    private String writeTime;
+    private Long writeTime;
 
 
 }

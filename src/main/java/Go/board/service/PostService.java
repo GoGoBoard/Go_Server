@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
@@ -59,11 +60,7 @@ public class PostService {
         newPost.setContent(newPostDTO.getContent());
 
         // 작성 시간 설정
-        LocalDateTime currentTime = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String formattedTime = currentTime.format(formatter);
-
-        newPost.setWriteTime(formattedTime);
+        newPost.setWriteTime(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
 
         Post createdPost = postRepository.save(newPost);
         return createdPost;
@@ -72,7 +69,6 @@ public class PostService {
 
     public PostOneResponse getPostById(int postId) {
         Optional<Post> optionalPost = postRepository.findById(postId); // 게시글 정보 가져오기
-
         List<CommentResponse> comments = commentService.getAllComment(postId); // 해당 게시글 댓글들 가져오기
 
         if (optionalPost.isPresent()) {
@@ -102,24 +98,24 @@ public class PostService {
         return null;
     }
 
-    public PostAllResponse partialUpdatePost(int postId, PostAllResponse updatedFieldsDTO) {
-        Optional<Post> optionalPost = postRepository.findById(postId);
-        if (optionalPost.isPresent()) {
-            Post existingPost = optionalPost.get();
-            if (updatedFieldsDTO.getTitle() != null) {
-                existingPost.setTitle(updatedFieldsDTO.getTitle());
-            }
-            if (updatedFieldsDTO.getContent() != null) {
-                existingPost.setContent(updatedFieldsDTO.getContent());
-            }
-            if (updatedFieldsDTO.getWriteTime() != null) {
-                existingPost.setWriteTime(updatedFieldsDTO.getWriteTime());
-            }
-            // Save the updated post
-            Post updatedPost = postRepository.save(existingPost);
-            return modelMapper.map(updatedPost, PostAllResponse.class); // Map entity to DTO
-        }
-        return null;
-    }
+//    public PostAllResponse partialUpdatePost(int postId, PostAllResponse updatedFieldsDTO) {
+//        Optional<Post> optionalPost = postRepository.findById(postId);
+//        if (optionalPost.isPresent()) {
+//            Post existingPost = optionalPost.get();
+//            if (updatedFieldsDTO.getTitle() != null) {
+//                existingPost.setTitle(updatedFieldsDTO.getTitle());
+//            }
+//            if (updatedFieldsDTO.getContent() != null) {
+//                existingPost.setContent(updatedFieldsDTO.getContent());
+//            }
+//            if (updatedFieldsDTO.getWriteTime() != null) {
+//                existingPost.setWriteTime(updatedFieldsDTO.getWriteTime());
+//            }
+//            // Save the updated post
+//            Post updatedPost = postRepository.save(existingPost);
+//            return modelMapper.map(updatedPost, PostAllResponse.class); // Map entity to DTO
+//        }
+//        return null;
+//    }
 
 }

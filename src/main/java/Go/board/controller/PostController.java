@@ -36,7 +36,7 @@ public class PostController {
         return new ResponseEntity<>(dto, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{articleId}") // 비정상 작동
+    @GetMapping("/{articleId}") // 정상 작동
     public ResponseEntity<PostOneResponse> getPostById(@PathVariable int articleId) {
         PostOneResponse dto = postService.getPostById(articleId);
         return ResponseEntity.ok(dto);
@@ -54,9 +54,9 @@ public class PostController {
         return postAllResponse != null ? ResponseEntity.ok(postAllResponse) : ResponseEntity.notFound().build();
     }
 
-    @PatchMapping("/{articleId}")
-    public ResponseEntity<PostAllResponse> partialUpdatePost(@PathVariable int articleId, @RequestBody PostAllResponse updatedFieldsDTO) {
-        PostAllResponse postAllResponse = postService.partialUpdatePost(articleId, updatedFieldsDTO);
-        return postAllResponse != null ? ResponseEntity.ok(postAllResponse) : ResponseEntity.notFound().build();
-    }
+//    @PatchMapping("/{articleId}")
+//    public ResponseEntity<PostAllResponse> partialUpdatePost(@PathVariable int articleId, @RequestBody PostAllResponse updatedFieldsDTO) {
+//        PostAllResponse postAllResponse = postService.partialUpdatePost(articleId, updatedFieldsDTO);
+//        return postAllResponse != null ? ResponseEntity.ok(postAllResponse) : ResponseEntity.notFound().build();
+//    }
 }

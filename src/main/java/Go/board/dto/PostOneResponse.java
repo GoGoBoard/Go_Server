@@ -14,6 +14,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostOneResponse {
+
+    private int postId;
     private String nickname;
     private String title;
     private String content;
@@ -22,6 +24,7 @@ public class PostOneResponse {
 
     public static PostOneResponse toDTO(Post post) {
         PostOneResponse postOneResponse = new PostOneResponse();
+        postOneResponse.setPostId(post.getPostId());
         postOneResponse.setNickname(post.getMemberId().getNickname());
         postOneResponse.setTitle(post.getTitle());
         postOneResponse.setContent(post.getContent());

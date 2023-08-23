@@ -34,6 +34,6 @@ public class Comment {
     private String content;
 
     @Column(name = "write_time")
-    private String write_time;
+    private Long writeTime;
 
 }
