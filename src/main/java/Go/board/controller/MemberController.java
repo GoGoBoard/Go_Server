@@ -1,6 +1,7 @@
 package Go.board.controller;
 
 import Go.board.dto.JoinRequest;
+import Go.board.dto.JoinResponse;
 import Go.board.dto.LoginRequest;
 import Go.board.dto.LoginResponseDTO;
 import Go.board.entity.Member;
@@ -22,7 +23,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/join")
-    public ResponseEntity<Void> join(@RequestBody JoinRequest joinRequest) {
+    public ResponseEntity<JoinResponse> join(@RequestBody JoinRequest joinRequest) {
         // Check if loginId and nickname are not duplicate
         if (memberService.checkLoginIdDuplicate(joinRequest.getLoginId())
                 || memberService.checkNicknameDuplicate(joinRequest.getNickname())) {
@@ -30,7 +31,9 @@ public class MemberController {
         }
 
         memberService.join(joinRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        JoinResponse joinResponse = new JoinResponse();
+        joinResponse.setNickname(joinRequest.getNickname());
+        return ResponseEntity.ok(joinResponse);
     }
 
     @PostMapping("/login")
