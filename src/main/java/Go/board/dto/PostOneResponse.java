@@ -19,7 +19,7 @@ public class PostOneResponse {
     private String nickname;
     private String title;
     private String content;
-    private String writeTime;
+    private Long writeTime;
     private List<CommentResponse> comments = new ArrayList<>();
 
     public static PostOneResponse toDTO(Post post) {

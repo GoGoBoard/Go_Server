@@ -9,14 +9,14 @@ import lombok.*;
 public class CommentResponse {
     private String nickname;
     private String content;
-    private String write_time;
+    private Long writeTime;
 
 
     public static CommentResponse toDto(Comment comment) {
         return new CommentResponse(
                 comment.getMember_id().getNickname(),
                 comment.getContent(),
-                comment.getWrite_time()
+                comment.getWriteTime()
         );
     }
 

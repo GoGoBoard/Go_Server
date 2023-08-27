@@ -11,7 +11,7 @@ import lombok.*;
 public class ArticlePaging{
     private String title;
     private String nickname;
-    private String writeTime;
+    private Long writeTime;
     private int postId;
 
     public static ArticlePaging toarticlePagingDTO(Post post) {
