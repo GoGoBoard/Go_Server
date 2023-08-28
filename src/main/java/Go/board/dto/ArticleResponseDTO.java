@@ -3,7 +3,6 @@ package Go.board.dto;
 import Go.board.entity.ArticleEntity;
 import lombok.*;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +17,9 @@ public class ArticleResponseDTO {
     private String nickname;
     private String title;
     private String content;
-    private Timestamp writeTime;
+    private long writeTime;
+    private int like;
+    private int dislike;
     private List<String> filePathList = new ArrayList<>();
     private List<CommentResponseDTO> comments = new ArrayList<>();
 

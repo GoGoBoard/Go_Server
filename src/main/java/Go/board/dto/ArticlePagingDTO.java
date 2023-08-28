@@ -3,8 +3,6 @@ package Go.board.dto;
 import Go.board.entity.ArticleEntity;
 import lombok.*;
 
-import java.sql.Timestamp;
-
 @Getter
 @Setter
 @ToString
@@ -14,13 +12,16 @@ public class ArticlePagingDTO {
     private int postId;
     private String title;
     private String nicknmae;
-    private Timestamp writeTime;
+    private long writeTime;
+    private int recommend;//추천 수
+    private long localDateTime;
+
 
     public static ArticlePagingDTO toarticlePagingDTO(ArticleEntity articleEntity) {
         ArticlePagingDTO articlePagingDTO = new ArticlePagingDTO();
         articlePagingDTO.postId = articleEntity.getPostId();
         articlePagingDTO.title = articleEntity.getTitle();
-        articlePagingDTO.writeTime = articleEntity.getWriteTime();
+        articlePagingDTO.localDateTime = articleEntity.getWriteTime();
         articlePagingDTO.nicknmae = articleEntity.getMember().getNickname();
         return articlePagingDTO;
     }

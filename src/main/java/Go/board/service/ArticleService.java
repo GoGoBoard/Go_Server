@@ -17,8 +17,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -36,7 +36,7 @@ public class ArticleService {
         MemberEntity memberEntity = memberService.findMemberByMemberId(memberId);//글 주인을 찾자
         ArticleEntity articleEntity = ArticleEntity.toArticleEntity(articleSaveDTO);//제목, 글 저장
         articleEntity.setMember(memberEntity);//member설정
-        articleEntity.setWriteTime(Timestamp.valueOf(LocalDateTime.now()));//현재 서버 시간으로 작성시간 설정
+        articleEntity.setWriteTime(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());//현재 서버 시간으로 작성시간 설정
         List<FileEntity> files = fileService.handleFile(articleSaveDTO.getFiles());//파일처리
         if (!files.isEmpty()) {
             fileService.saveFile(files, articleEntity);
@@ -57,12 +57,10 @@ public class ArticleService {
 
     public ArticleEntity findByPostId(int postId) {
         Optional<ArticleEntity> articleEntity = articleRepository.findById(postId);
-        if (articleEntity.isPresent()) {
-            return articleEntity.get();
-        } else return null;
+        return articleEntity.orElse(null);
     }
 
-    public ArticleEntity update(int postId, ArticleSaveDTO articleSaveDTO) throws IOException {
+    public ArticleEntity update(int postId, ArticleSaveDTO articleSaveDTO) {
         //글을 찾자
         ArticleEntity findArticle = articleRepository.findByPostId(postId);
         findArticle.setTitle(articleSaveDTO.getTitle());
@@ -74,9 +72,7 @@ public class ArticleService {
         ArticleEntity findArticle = findByPostId(postId);
         //댓글이 있다면 댓글 먼저 삭제하자
         List<CommentEntity> comments = commentRepository.findAllByPostId(findArticle);
-        for (CommentEntity comment : comments) {
-            commentRepository.delete(comment);
-        }
+        commentRepository.deleteAll(comments);
         MemberEntity findMember = findArticle.getMember();
         if (findMember.getMemberId() != memberId) {
             return false;
@@ -86,15 +82,24 @@ public class ArticleService {
         }
     }
 
-    public Page<ArticlePagingDTO> paging(Pageable pageable) {
+    public List<ArticlePagingDTO> paging(Pageable pageable) {
         int page = pageable.getPageNumber() - 1;//페이지 위치에 있는 값은 0부터 시작 like배열
         int pageLimit = 3; //한 페이지에 보여줄 개수
         //한 페이지 당 3개씩 글을 보여주고 정렬기준은 id기준으로 내림차순 정렬
         Page<ArticleEntity> articleEntities =
                 articleRepository.findAll(PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "postId")));
-        Page<ArticlePagingDTO> articleDTOS =
-                articleEntities.map(articleEntity -> ArticlePagingDTO.toarticlePagingDTO(articleEntity
-                ));
-        return articleDTOS;
+        List<ArticlePagingDTO> dto = new ArrayList<>();
+        for (ArticleEntity articleEntity : articleEntities) {
+            dto.add(ArticlePagingDTO.toarticlePagingDTO(articleEntity));
+        }
+        return dto;
+    }
+
+    public boolean checkWriter(int memberId, int postId) {
+        //글 작성자와 접근하려고하는 사람 일치여부 확인
+        MemberEntity findMember = memberService.findMemberByMemberId(memberId);
+        ArticleEntity findArticle = findByPostId(postId);
+        MemberEntity articleOwner = findArticle.getMember();
+        return findMember == articleOwner;
     }
 }

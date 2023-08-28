@@ -6,13 +6,13 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
-@Entity
+@Entity(name = "recommend")
 @Getter
 @Setter
 @NoArgsConstructor
 public class RecommendEntity {
     //게시글<->추천 일대다
-    //추천<->사용자 다대일
+    //사용자<->추천 일대다
     @Id
     @GeneratedValue
     @Column(name = "rec_id")
