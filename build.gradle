@@ -36,6 +36,8 @@ dependencies {
 	implementation 'org.springframework.security:spring-security-crypto:5.7.1'
 	// 파일 처리 관련 의존성 주입
 	implementation 'commons-io:commons-io:2.6'
+	// 구글 소셜로그인을 위한 의존성
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 }
 
 tasks.named('test') {

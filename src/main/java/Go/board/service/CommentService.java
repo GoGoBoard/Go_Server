@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,12 +48,8 @@ public class CommentService {
         comment.setMember_id(member);
         comment.setContent(dto.getContent());
 
-        // Get the current date and time
-        LocalDateTime currentTime = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String formattedTime = currentTime.format(formatter);
-
-        comment.setWrite_time(formattedTime);
+        // 작성 시간 설정
+        comment.setWriteTime(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
 
         Comment createdComment = commentRepository.save(comment);
         return CommentResponse.toDto(createdComment);

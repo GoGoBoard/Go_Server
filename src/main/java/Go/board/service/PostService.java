@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -48,7 +49,9 @@ public class PostService {
         return postRepository.findAll();
     }
 
-    public Post createPost(HttpServletRequest request, PostSaveRequestDTO newPostDTO) {
+    public Post createPost(HttpServletRequest request,
+                           PostSaveRequestDTO newPostDTO,
+                           List<MultipartFile> files) {
         // 글을 작성하려는 작성자의 세션 정보 얻어오기
         HttpSession session = request.getSession();
         Long memberId = (Long)session.getAttribute("memberId");
