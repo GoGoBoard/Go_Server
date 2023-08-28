@@ -1,9 +1,12 @@
 package Go.board.service;
 
+import Go.board.Handler.FileHandler;
 import Go.board.dto.*;
+import Go.board.entity.Attachment;
 import Go.board.entity.Comment;
 import Go.board.entity.Member;
 import Go.board.entity.Post;
+import Go.board.repository.AttachmentRepository;
 import Go.board.repository.CommentRepository;
 import Go.board.repository.MemberRepository;
 import Go.board.repository.PostRepository;
@@ -30,8 +33,10 @@ import java.util.stream.Collectors;
 public class PostService {
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
+    private final AttachmentRepository attachmentRepository;
     private final ModelMapper modelMapper;
     private final CommentService commentService;
+    private final FileHandler fileHandler;
 
     public ArticlePagingResponse paging(Pageable pageable) {
         int page = pageable.getPageNumber() - 1;//페이지 위치에 있는 값은 0부터 시작 like배열
@@ -51,7 +56,8 @@ public class PostService {
 
     public Post createPost(HttpServletRequest request,
                            PostSaveRequestDTO newPostDTO,
-                           List<MultipartFile> files) {
+                           List<MultipartFile> files
+    )throws Exception {
         // 글을 작성하려는 작성자의 세션 정보 얻어오기
         HttpSession session = request.getSession();
         Long memberId = (Long)session.getAttribute("memberId");
@@ -64,6 +70,16 @@ public class PostService {
 
         // 작성 시간 설정
         newPost.setWriteTime(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+
+        List<Attachment> attachmentList = fileHandler.parseFileInfo(files);
+
+        // 파일이 존재할 때에만 처리
+        if(!attachmentList.isEmpty()) {
+            for(Attachment attachment : attachmentList) {
+                // 파일을 DB에 저장
+                newPost.addPhoto(attachmentRepository.save(attachment));
+            }
+        }
 
         Post createdPost = postRepository.save(newPost);
         return createdPost;

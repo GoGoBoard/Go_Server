@@ -20,9 +20,7 @@ import java.util.List;
 public class FileHandler {
     private final AttachmentService attachmentService;
 
-    public List<Attachment> parseFileInfo(
-            List<MultipartFile> multipartFiles
-    )throws Exception {
+    public List<Attachment> parseFileInfo(List<MultipartFile> multipartFiles)throws Exception {
         // 반환할 파일 리스트
         List<Attachment> fileList = new ArrayList<>();
 

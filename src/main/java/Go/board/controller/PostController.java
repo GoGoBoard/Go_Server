@@ -34,11 +34,12 @@ public class PostController {
             HttpServletRequest request,
             @RequestPart(value = "newPost") PostSaveRequestDTO newPostDTO,
             @RequestPart(value = "image", required=false) List<MultipartFile> files
-    ) {
+    )throws Exception {
         Post createdPost = postService.createPost(request,newPostDTO,files);
         PostSaveResponseDTO dto = new PostSaveResponseDTO();
         dto.setTitle(createdPost.getTitle());
         dto.setContent(createdPost.getContent());
+//        dto.setFilePathList(createdPost.getAttachment());
         return new ResponseEntity<>(dto, HttpStatus.CREATED);
     }
 
