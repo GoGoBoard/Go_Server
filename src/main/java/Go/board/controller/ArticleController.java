@@ -31,13 +31,14 @@ public class ArticleController {
     private final RecommendService recommendService;
 
     @PostMapping("")
-    public ResponseEntity<String> save(
+    public ResponseEntity save(
             @RequestPart("title") String title,
             @RequestPart("content") String content,
             @RequestPart("file") List<MultipartFile> files
             , HttpServletRequest request
     ) {
         try {
+            //todo XSS
             HttpSession session = request.getSession(false);
             int memberId = (int) session.getAttribute("memberId");
             ArticleSaveDTO article = new ArticleSaveDTO(title, content, files);
@@ -45,7 +46,7 @@ public class ArticleController {
             return ResponseEntity.ok("저장 성공");
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("저장 실패");
+            return ResponseEntity.ok().build();
         }
     }
 
@@ -65,7 +66,7 @@ public class ArticleController {
 
     @Transactional
     @PutMapping("/{postId}")
-    public ResponseEntity<String> update(@PathVariable int postId
+    public ResponseEntity update(@PathVariable int postId
             , @ModelAttribute ArticleSaveDTO articleSaveDTO,
                                          HttpServletRequest request
     ) {
@@ -79,9 +80,9 @@ public class ArticleController {
             ArticleEntity update = articleService.update(postId, articleSaveDTO);
             //파일 수정
             fileService.updateFile(update, articleSaveDTO.getFiles());
-            return ResponseEntity.ok("수정 성공");
+            return ResponseEntity.ok().build();
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("저장 실패");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
     }
