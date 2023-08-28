@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,10 +26,11 @@ public class CommentController {
     }
 
     @PostMapping("/{postId}")
-    public ResponseEntity<CommentResponseDTO> saveComment(@PathVariable int postId, @RequestBody String content, HttpServletRequest request) {
+    public ResponseEntity<CommentResponseDTO> saveComment(@PathVariable int postId, @RequestBody Map<String,String> content, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         int memberId = (int) session.getAttribute("memberId");//댓글 작성자
-        CommentResponseDTO dto = commentService.saveComment(content, postId, memberId);
+        String comment =content.get("content");
+        CommentResponseDTO dto = commentService.saveComment(comment, postId, memberId);
         return dto!=null ? ResponseEntity.ok(dto) : ResponseEntity.badRequest().build();
     }
 
