@@ -11,7 +11,7 @@ import lombok.*;
 public class ArticlePagingDTO {
     private int postId;
     private String title;
-    private String nicknmae;
+    private String nickname;
     private long writeTime;
     private int recommend;//추천 수
     private long localDateTime;
@@ -22,7 +22,7 @@ public class ArticlePagingDTO {
         articlePagingDTO.postId = articleEntity.getPostId();
         articlePagingDTO.title = articleEntity.getTitle();
         articlePagingDTO.localDateTime = articleEntity.getWriteTime();
-        articlePagingDTO.nicknmae = articleEntity.getMember().getNickname();
+        articlePagingDTO.nickname = articleEntity.getMember().getNickname();
         return articlePagingDTO;
     }
 }
