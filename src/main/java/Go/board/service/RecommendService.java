@@ -30,11 +30,19 @@ public class RecommendService {
 
         Post post = postRepository.findById(articleId).orElse(null);
 
-        // 이미 좋아요 되어있으면 좋아요 취소
+        // 해당 게시글에 대한 추천, 비추천 기록이 있는지 확인
         if(recommendRepository.findByMemberAndPost(member, post).isPresent()) {
-            Recommend recommend = recommendRepository.findByMemberAndPost(member,post).orElse(null);
-            recommendRepository.delete(recommend);
-            return member;
+            Recommend recommend = recommendRepository.findByMemberAndPost(member, post).orElse(null);
+            // 이미 좋아요를 눌렀다면 좋아요를 취소
+            if (recommend.isRecommend()) {
+                recommendRepository.delete(recommend);
+                return member;
+            }
+            // 싫어요를 눌렀던 상황이면 싫어요를 좋아요로 변경
+            else {
+                recommend.setRecommend(true);
+                return member;
+            }
         }
 
         Recommend recommend = new Recommend();
@@ -55,11 +63,19 @@ public class RecommendService {
 
         Post post = postRepository.findById(articleId).orElse(null);
 
-        // 이미 싫어요 되어있으면 싫어요 취소
+        // 해당 게시글에 대한 추천, 비추천 기록이 있는지 확인
         if(recommendRepository.findByMemberAndPost(member, post).isPresent()) {
-            Recommend recommend = recommendRepository.findByMemberAndPost(member,post).orElse(null);
-            recommendRepository.delete(recommend);
-            return member;
+            Recommend recommend = recommendRepository.findByMemberAndPost(member, post).orElse(null);
+            // 이미 비추천을 눌렀다면 비추천을 취소
+            if (!recommend.isRecommend()) {
+                recommendRepository.delete(recommend);
+                return member;
+            }
+            // 좋아요를 눌렀던 상황이면 좋아요를 싫어요로 변경
+            else {
+                recommend.setRecommend(false);
+                return member;
+            }
         }
 
         Recommend recommend = new Recommend();
