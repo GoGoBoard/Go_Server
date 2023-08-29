@@ -78,5 +78,12 @@ public class PostController {
         return recommendResponse != null ? ResponseEntity.ok(recommendResponse) : ResponseEntity.notFound().build();
     }
 
-    
+    @PostMapping("/{articleId}/dislike")
+    public ResponseEntity<RecommendResponse> disLikePost(@PathVariable int articleId, HttpServletRequest request
+    )throws Exception {
+        Member member = recommendService.dislike(articleId, request);
+        RecommendResponse recommendResponse = new RecommendResponse();
+        recommendResponse.setNickname(member.getNickname());
+        return recommendResponse != null ? ResponseEntity.ok(recommendResponse) : ResponseEntity.notFound().build();
+    }
 }

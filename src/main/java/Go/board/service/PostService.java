@@ -37,6 +37,7 @@ public class PostService {
     private final ModelMapper modelMapper;
     private final CommentService commentService;
     private final FileHandler fileHandler;
+    private final RecommendService recommendService;
 
     public ArticlePagingResponse paging(Pageable pageable) {
         int page = pageable.getPageNumber() - 1;//페이지 위치에 있는 값은 0부터 시작 like배열
@@ -94,6 +95,8 @@ public class PostService {
             Post getPost = optionalPost.get();
             PostOneResponse dto = PostOneResponse.toDTO(getPost);
             dto.setComments(comments);
+            dto.setLike(recommendService.getLike(postId));
+            dto.setDislike(recommendService.getDislike(postId));
             return dto;
         } else return null;
     }
