@@ -14,16 +14,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/member")
 public class MemberController {
     private final MemberService memberService;
 
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginDTO loginDTO, HttpSession session) {
+    public ResponseEntity<Map<String, String>> login(@RequestBody LoginDTO loginDTO, HttpSession session) {
         MemberEntity loginMember = memberService.login(loginDTO);
 
         if (loginMember != null) {
@@ -31,25 +33,28 @@ public class MemberController {
             session.setAttribute("memberId", loginMember.getMemberId());
 
             session.setMaxInactiveInterval(1800);//30분 유지
-            System.out.println(session.getAttribute("memberId"));
-            return ResponseEntity.ok("로그인 성공");
+            Map<String, String> result = new HashMap<>();
+            result.put("nickname", loginMember.getNickname());
+            return ResponseEntity.ok(result);
         } else {
             //로그인 실패처리
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("아이디 또는 비밀번호가 일치하지 않습니다");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 
     @PostMapping("/join")
-    public ResponseEntity<String> register(@RequestBody @Valid RegisterDTO registerDTO) {
+    public ResponseEntity<Map<String, String>> register(@RequestBody @Valid RegisterDTO registerDTO) {
         boolean registerOk = memberService.registerMember(registerDTO);
+        Map<String, String> result = new HashMap<>();
+        result.put("nickname", registerDTO.getNickname());
         if (registerOk) {
-            return ResponseEntity.ok("회원가입에 성공하였습니다.");
-        } else return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("회원가입에 실패하였습니다.(중복된 아이디 존재)");
+            return ResponseEntity.ok(result);
+        } else return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<String> logout(HttpSession session) {
+    public ResponseEntity logout(HttpSession session) {
         session.invalidate();
-        return ResponseEntity.ok("로그아웃되었습니다.");
+        return ResponseEntity.ok().build();
     }
 }
