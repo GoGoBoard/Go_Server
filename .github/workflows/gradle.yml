@@ -9,9 +9,9 @@ name: Java CI with Gradle
 
 on:
   push:
-    branches: [ "file_gyu", "ci" ]
+    branches: [ "post_jueun", "ci" ]
   pull_request:
-    branches: [ "file_gyu", "ci" ]
+    branches: [ "post_jueun", "ci" ]
 
 permissions:
   contents: read
