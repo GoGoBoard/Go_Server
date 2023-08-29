@@ -1,10 +1,12 @@
 package Go.board.controller;
 
 import Go.board.dto.*;
+import Go.board.entity.Member;
 import Go.board.entity.Post;
+import Go.board.entity.Recommend;
 import Go.board.service.PostService;
+import Go.board.service.RecommendService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -15,13 +17,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/article")
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
+    private final RecommendService recommendService;
 
     @GetMapping("/paging")//article/paging?page=1
     public ResponseEntity<ArticlePagingResponse> paging(@PageableDefault(page = 1) Pageable pageable) {
@@ -66,4 +68,15 @@ public class PostController {
 //        PostAllResponse postAllResponse = postService.partialUpdatePost(articleId, updatedFieldsDTO);
 //        return postAllResponse != null ? ResponseEntity.ok(postAllResponse) : ResponseEntity.notFound().build();
 //    }
+
+    @PostMapping("/{articleId}/like")
+    public ResponseEntity<RecommendResponse> likePost(@PathVariable int articleId, HttpServletRequest request
+    ) throws Exception{
+        Member member = recommendService.like(articleId,request);
+        RecommendResponse recommendResponse = new RecommendResponse();
+        recommendResponse.setNickname(member.getNickname());
+        return recommendResponse != null ? ResponseEntity.ok(recommendResponse) : ResponseEntity.notFound().build();
+    }
+
+    
 }

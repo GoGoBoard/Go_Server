@@ -28,7 +28,4 @@ public class Recommend {
     private Member member;
 
     private boolean recommend;
-
-
-
 }
