@@ -20,6 +20,8 @@ public class PostOneResponse {
     private String title;
     private String content;
     private Long writeTime;
+    private int like;
+    private int dislike;
     private List<CommentResponse> comments = new ArrayList<>();
 
     public static PostOneResponse toDTO(Post post) {
