@@ -5,7 +5,10 @@ import Go.board.dto.ArticleResponseDTO;
 import Go.board.dto.ArticleSaveDTO;
 import Go.board.dto.CommentResponseDTO;
 import Go.board.entity.ArticleEntity;
-import Go.board.service.*;
+import Go.board.service.ArticleService;
+import Go.board.service.CommentService;
+import Go.board.service.FileService;
+import Go.board.service.RecommendService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -34,8 +37,8 @@ public class ArticleController {
     public ResponseEntity save(
             @RequestPart("title") String title,
             @RequestPart("content") String content,
-            @RequestPart("file") List<MultipartFile> files
-            , HttpServletRequest request
+            @RequestPart("file") List<MultipartFile> files,
+            HttpServletRequest request
     ) {
         try {
             //todo XSS

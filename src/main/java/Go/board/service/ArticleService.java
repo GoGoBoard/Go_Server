@@ -16,7 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -32,7 +31,7 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
     private final CommentRepository commentRepository;
 
-    public void save(ArticleSaveDTO articleSaveDTO, int memberId) throws IOException {//저장
+    public void save(ArticleSaveDTO articleSaveDTO, int memberId) {//저장
         MemberEntity memberEntity = memberService.findMemberByMemberId(memberId);//글 주인을 찾자
         ArticleEntity articleEntity = ArticleEntity.toArticleEntity(articleSaveDTO);//제목, 글 저장
         articleEntity.setMember(memberEntity);//member설정

@@ -18,6 +18,8 @@ public class RecommendEntity {
     @Column(name = "rec_id")
     private int recId;
 
+    //todo composite key로 묶게 됐을 때 이점을 생각해보자
+
     @ManyToOne
     @JoinColumn(name = "post_id")
     private ArticleEntity postId;
