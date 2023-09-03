@@ -25,7 +25,7 @@ public class FileService {
     //db에 저장할 이름을 만들고  파일 엔티티 리스트를 반환한다
     public List<FileEntity> handleFile(List<MultipartFile> fileList) {
         String path = "/home/~/Go_Server/image";
-        String privateKeyFilePath = "C:\\Users\\오주은\\Downloads\\gogoboard_key (1).pem";
+        String privateKeyFilePath = "C://Users//오주은//Downloads//gogoboard_key (1).pem";
         String username = "ubuntu"; // Replace with your Ubuntu server username
         String host = "52.79.65.54"; // Replace with your Ubuntu server IP or hostname
 
