@@ -37,14 +37,14 @@ public class ArticleController {
     public ResponseEntity save(
             @RequestPart("title") String title,
             @RequestPart("content") String content,
-            @RequestPart("file") List<MultipartFile> file,
+            @RequestPart("files") List<MultipartFile> files,
             HttpServletRequest request
     ) {
         try {
             //todo XSS
             HttpSession session = request.getSession(false);
             int memberId = (int) session.getAttribute("memberId");
-            ArticleSaveDTO article = new ArticleSaveDTO(title, content, file);
+            ArticleSaveDTO article = new ArticleSaveDTO(title, content, files);
             articleService.save(article, memberId);
             return ResponseEntity.ok("저장 성공");
         } catch (Exception e) {
