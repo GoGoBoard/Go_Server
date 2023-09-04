@@ -1,8 +1,8 @@
 package Go.board.service;
 
 import Go.board.dto.ArticlePagingDTO;
+import Go.board.dto.ArticleRequestDTO;
 import Go.board.dto.ArticleResponseDTO;
-import Go.board.dto.ArticleSaveDTO;
 import Go.board.entity.ArticleEntity;
 import Go.board.entity.CommentEntity;
 import Go.board.entity.FileEntity;
@@ -32,12 +32,12 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
     private final CommentRepository commentRepository;
 
-    public void save(ArticleSaveDTO articleSaveDTO, int memberId) {//저장
+    public void save(ArticleRequestDTO articleRequestDTO, int memberId) {//저장
         MemberEntity memberEntity = memberService.findMemberByMemberId(memberId);//글 주인을 찾자
-        ArticleEntity articleEntity = ArticleEntity.toArticleEntity(articleSaveDTO);//제목, 글 저장
+        ArticleEntity articleEntity = ArticleEntity.toArticleEntity(articleRequestDTO);//제목, 글 저장
         articleEntity.setMember(memberEntity);//member설정
         articleEntity.setWriteTime(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());//현재 서버 시간으로 작성시간 설정
-        List<FileEntity> files = fileService.handleFile(articleSaveDTO.getFiles());//파일처리
+        List<FileEntity> files = fileService.handleFile(articleRequestDTO.getFiles());//파일처리
         if (!files.isEmpty()) {
             fileService.saveFile(files, articleEntity);
         }
@@ -60,11 +60,11 @@ public class ArticleService {
         return articleEntity.orElse(null);
     }
 
-    public ArticleEntity update(int postId, ArticleSaveDTO articleSaveDTO) {
+    public ArticleEntity update(int postId, ArticleRequestDTO articleRequestDTO) {
         //글을 찾자
         ArticleEntity findArticle = articleRepository.findByPostId(postId);
-        findArticle.setTitle(articleSaveDTO.getTitle());
-        findArticle.setContent(articleSaveDTO.getContent());//제목,내용 수정
+        findArticle.setTitle(articleRequestDTO.getTitle());
+        findArticle.setContent(articleRequestDTO.getContent());//제목,내용 수정
         return findArticle;
     }
 

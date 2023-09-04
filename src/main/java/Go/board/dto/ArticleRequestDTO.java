@@ -10,7 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class ArticleSaveDTO {
+public class ArticleRequestDTO {
     private String title;
     private String content;
     private List<MultipartFile> files;

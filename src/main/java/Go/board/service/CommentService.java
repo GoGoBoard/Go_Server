@@ -33,7 +33,9 @@ public class CommentService {
 
         return CommentResponseDTO.toCommentResponseDTO(commentEntity);
     }
-    public CommentResponseDTO updateComment(CommentEntity comment, String content) {
+
+    public CommentResponseDTO updateComment(int commentId, String content) {
+        CommentEntity comment = FindByCommentId(commentId);
         comment.setContent(content);
 
         return CommentResponseDTO.toCommentResponseDTO(comment);
@@ -49,6 +51,11 @@ public class CommentService {
 
     public CommentEntity FindByCommentId(int commentId) {
         return commentRepository.findByCommentId(commentId);
+    }
+
+    public int FindMemberIdByCommentId(int commentId) {
+        CommentEntity commentEntity = FindByCommentId(commentId);
+        return commentEntity.getMemberId().getMemberId();
     }
 
     public List<CommentResponseDTO> getAllComment(int postId) {

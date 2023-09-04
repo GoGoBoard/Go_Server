@@ -1,6 +1,5 @@
 package Go.board.entity;
 
-import Go.board.dto.MemberDTO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -35,16 +34,6 @@ public class MemberEntity {
             article.setMember(this);
         }
     }*/
-
-    public static MemberEntity toSaveMember(MemberDTO memberDTO) {
-        MemberEntity memberEntity = new MemberEntity();
-        memberEntity.setMemberId(memberDTO.getMemberId());
-        memberEntity.setNickname(memberDTO.getNickname());
-        memberEntity.setPassword(memberDTO.getPassword());
-        memberEntity.setLoginId(memberDTO.getLoginId());
-        return memberEntity;
-    }
-
     @Override
     public String toString() {
         return "MemberEntity{" +

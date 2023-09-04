@@ -2,7 +2,6 @@ package Go.board.controller;
 
 import Go.board.dto.CommentRequestDTO;
 import Go.board.dto.CommentResponseDTO;
-import Go.board.entity.CommentEntity;
 import Go.board.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -29,22 +28,22 @@ public class CommentController {
     public ResponseEntity<CommentResponseDTO> saveComment(@PathVariable int postId, @RequestBody CommentRequestDTO commentRequest, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         int memberId = (int) session.getAttribute("memberId");//댓글 작성자
-        String comment = commentRequest.getContent();
-        CommentResponseDTO dto = commentService.saveComment(comment, postId, memberId);
+        CommentResponseDTO dto = commentService.saveComment(commentRequest.getContent(), postId, memberId);
         return dto != null ? ResponseEntity.ok(dto) : ResponseEntity.badRequest().build();
     }
 
     @Transactional // 따로 save하지 않아도 db수정됨(더티체킹)
     @PutMapping("/{commentId}")
-    public ResponseEntity<CommentResponseDTO> updateComment(@PathVariable int commentId, @RequestBody String content,
+    public ResponseEntity<CommentResponseDTO> updateComment(@PathVariable int commentId, @RequestBody CommentRequestDTO commentRequest,
                                                             HttpServletRequest request) {
 
         try {
             HttpSession session = request.getSession(false);
             int memberId = (int) session.getAttribute("memberId");
-            CommentEntity find = commentService.FindByCommentId(commentId);
-            if(find.getMemberId().getMemberId()!=memberId) return ResponseEntity.badRequest().build();//작성자만 수정 가능
-            CommentResponseDTO responseDTO = commentService.updateComment(find, content);
+
+            int findMember = commentService.FindMemberIdByCommentId(commentId);
+            if (findMember != memberId) return ResponseEntity.badRequest().build();//작성자만 수정 가능
+            CommentResponseDTO responseDTO = commentService.updateComment(commentId, commentRequest.getContent());
             return ResponseEntity.ok(responseDTO);
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
@@ -52,10 +51,10 @@ public class CommentController {
     }
 
     @DeleteMapping("/{commentId}")
-    public ResponseEntity deleteComment(@PathVariable int commentId,HttpServletRequest request) {
+    public ResponseEntity deleteComment(@PathVariable int commentId, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         int memberId = (int) session.getAttribute("memberId");
-        boolean deleted = commentService.deleteComment(commentId,memberId);
+        boolean deleted = commentService.deleteComment(commentId, memberId);
         return deleted ? ResponseEntity.ok().build() : ResponseEntity.badRequest().build();
 
     }

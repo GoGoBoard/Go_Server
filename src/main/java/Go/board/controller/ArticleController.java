@@ -1,8 +1,8 @@
 package Go.board.controller;
 
 import Go.board.dto.ArticlePagingDTO;
+import Go.board.dto.ArticleRequestDTO;
 import Go.board.dto.ArticleResponseDTO;
-import Go.board.dto.ArticleSaveDTO;
 import Go.board.dto.CommentResponseDTO;
 import Go.board.entity.ArticleEntity;
 import Go.board.service.ArticleService;
@@ -44,7 +44,7 @@ public class ArticleController {
             //todo XSS
             HttpSession session = request.getSession(false);
             int memberId = (int) session.getAttribute("memberId");
-            ArticleSaveDTO article = new ArticleSaveDTO(title, content, files);
+            ArticleRequestDTO article = new ArticleRequestDTO(title, content, files);
             articleService.save(article, memberId);
             return ResponseEntity.ok("{}");
         } catch (Exception e) {
@@ -52,10 +52,11 @@ public class ArticleController {
             return ResponseEntity.badRequest().build();
         }
     }
+
     @GetMapping("/{postId}")
     public ResponseEntity<ArticleResponseDTO> getPostByPostId(@PathVariable("postId") int postId) {
         ArticleResponseDTO dto = articleService.GetArticle(postId);
-        if(dto==null) return ResponseEntity.noContent().build();
+        if (dto == null) return ResponseEntity.noContent().build();
         List<CommentResponseDTO> allComment = commentService.getAllComment(postId);
         dto.setComments(allComment);//댓글까지
         //추천/비추천 개수
@@ -69,8 +70,8 @@ public class ArticleController {
     @Transactional
     @PutMapping("/{postId}")
     public ResponseEntity update(@PathVariable int postId
-            , @ModelAttribute ArticleSaveDTO articleSaveDTO,
-                                         HttpServletRequest request
+            , @ModelAttribute ArticleRequestDTO articleRequestDTO,
+                                 HttpServletRequest request
     ) {
         try {
             HttpSession session = request.getSession(false);
@@ -79,9 +80,9 @@ public class ArticleController {
             if (findArticle.getMember().getMemberId() != memberId)
                 return ResponseEntity.badRequest().build();//글 작성자 아니면 수정 불가
             //글 수정
-            ArticleEntity update = articleService.update(postId, articleSaveDTO);
+            ArticleEntity update = articleService.update(postId, articleRequestDTO);
             //파일 수정
-            fileService.updateFile(update, articleSaveDTO.getFiles());
+            fileService.updateFile(update, articleRequestDTO.getFiles());
             return ResponseEntity.ok("{}");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

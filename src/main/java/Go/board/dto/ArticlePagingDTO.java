@@ -15,7 +15,6 @@ public class ArticlePagingDTO {
     private long writeTime;
     private int recommend;//추천 수
 
-
     public static ArticlePagingDTO toarticlePagingDTO(ArticleEntity articleEntity) {
         ArticlePagingDTO articlePagingDTO = new ArticlePagingDTO();
         articlePagingDTO.postId = articleEntity.getPostId();
