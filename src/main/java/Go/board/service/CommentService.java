@@ -42,8 +42,8 @@ public class CommentService {
 
     public boolean deleteComment(int commentId, int memberId) {
         CommentEntity find = FindByCommentId(commentId);
-        int findMember = find.getMemberId().getMemberId();
-        if (findMember != memberId) return false;
+        int findMemberId = find.getMemberId().getMemberId();
+        if (findMemberId != memberId) return false;
         commentRepository.delete(find);
         return true;
     }
