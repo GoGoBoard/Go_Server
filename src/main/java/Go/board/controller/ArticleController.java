@@ -102,11 +102,13 @@ public class ArticleController {
     }
 
     @GetMapping("/paging")//article/paging?page=1
-    public ResponseEntity<List<ArticlePagingDTO>> paging(@PageableDefault(page = 1) Pageable pageable) {
+    public ResponseEntity<Map<String, List<ArticlePagingDTO>>> paging(@PageableDefault(page = 1) Pageable pageable) {
         List<ArticlePagingDTO> paging = articleService.paging(pageable);
-        if (paging != null)
-            return ResponseEntity.ok(paging);
-        else return ResponseEntity.badRequest().build();//400
+        if (paging != null) {
+            Map<String, List<ArticlePagingDTO>> result = new HashMap<>();
+            result.put("content", paging);
+            return ResponseEntity.ok(result);
+        } else return ResponseEntity.badRequest().build();//400
     }
 
     @PostMapping("/{postId}/like")
