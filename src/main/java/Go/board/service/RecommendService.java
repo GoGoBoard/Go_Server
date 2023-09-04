@@ -20,13 +20,12 @@ public class RecommendService {
 
     public void like(int memberId, int postId) {
         MemberEntity findMember = memberService.findMemberByMemberId(memberId);
-        Optional<RecommendEntity> entity = recommendRepository.findByMemberId(findMember);
-        if(entity.isEmpty()) {
-            ArticleEntity findArticle = articleService.findByPostId(postId);
+        ArticleEntity findArticle = articleService.findByPostId(postId);
+        Optional<RecommendEntity> entity = recommendRepository.findByMemberIdAndPostId(findMember, findArticle);
+        if (entity.isEmpty()) {
             RecommendEntity recommendEntity = makeEntity(true, findMember, findArticle);
             recommendRepository.save(recommendEntity);
-        }
-        else{
+        } else {
             //이미 추천/비추천했을 경우
             entity.get().setRecommend(true);
         }
@@ -35,13 +34,12 @@ public class RecommendService {
 
     public void dislike(int memberId, int postId) {
         MemberEntity findMember = memberService.findMemberByMemberId(memberId);
-        Optional<RecommendEntity> entity = recommendRepository.findByMemberId(findMember);
-        if(entity.isEmpty()) {
-            ArticleEntity findArticle = articleService.findByPostId(postId);
+        ArticleEntity findArticle = articleService.findByPostId(postId);
+        Optional<RecommendEntity> entity = recommendRepository.findByMemberIdAndPostId(findMember, findArticle);
+        if (entity.isEmpty()) {
             RecommendEntity recommendEntity = makeEntity(false, findMember, findArticle);
             recommendRepository.save(recommendEntity);
-        }
-        else{
+        } else {
             //이미 추천/비추천했을 경우
             entity.get().setRecommend(false);
         }

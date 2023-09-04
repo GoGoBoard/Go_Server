@@ -92,6 +92,7 @@ public class ArticleController {
 
     @DeleteMapping("/{postId}")
     public ResponseEntity delete(@PathVariable("postId") int postId, HttpServletRequest request) {
+        //세션 유효성 확인
         HttpSession session = request.getSession(false);
         int memberId = (int) session.getAttribute("memberId");//유저찾
         boolean checkOwner = articleService.checkWriter(memberId, postId);

@@ -12,6 +12,7 @@ import java.util.Optional;
 @Repository
 public interface RecommendRepository extends JpaRepository<RecommendEntity, Integer> {
     List<RecommendEntity> findByPostIdAndRecommend(ArticleEntity article, boolean like);
-    Optional<RecommendEntity> findByMemberId(MemberEntity member);
+
+    Optional<RecommendEntity> findByMemberIdAndPostId(MemberEntity member, ArticleEntity article);
 
 }
