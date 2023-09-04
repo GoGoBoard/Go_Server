@@ -37,7 +37,7 @@ public class ArticleController {
     public ResponseEntity save(
             @RequestPart("title") String title,
             @RequestPart("content") String content,
-            @RequestPart("files") List<MultipartFile> files,
+            @RequestPart(value = "files", required = false) List<MultipartFile> files,
             HttpServletRequest request
     ) {
         try {
@@ -52,7 +52,6 @@ public class ArticleController {
             return ResponseEntity.ok().build();
         }
     }
-
     @GetMapping("/{postId}")
     public ResponseEntity<ArticleResponseDTO> getPostByPostId(@PathVariable("postId") int postId) {
         ArticleResponseDTO dto = articleService.GetArticle(postId);
