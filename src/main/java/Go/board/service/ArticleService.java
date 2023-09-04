@@ -99,6 +99,6 @@ public class ArticleService {
         MemberEntity findMember = memberService.findMemberByMemberId(memberId);
         ArticleEntity findArticle = findByPostId(postId);
         MemberEntity articleOwner = findArticle.getMember();
-        return findMember == articleOwner;
+        return findMember.getMemberId() == articleOwner.getMemberId();
     }
 }

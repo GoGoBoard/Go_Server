@@ -28,6 +28,7 @@ public class FileService {
         String privateKeyFilePath = "C://Users//오주은//Downloads//gogoboard_key (1).pem";
         String username = "ubuntu"; // Replace with your Ubuntu server username
         String host = "52.79.65.54"; // Replace with your Ubuntu server IP or hostname
+        //서버실행할 때 환경변수 전해주는 식으로 -? 민감한 정보, 서버 재컴파일할 필요 사라짐
 
         List<FileEntity> fileEntityList = new ArrayList<>();
         if (!CollectionUtils.isEmpty(fileList)) {//첨부파일 존재한다면
