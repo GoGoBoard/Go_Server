@@ -112,6 +112,7 @@ public class ArticleController {
         } else return ResponseEntity.badRequest().build();//400
     }
 
+    @Transactional
     @PostMapping("/{postId}/like")
     public ResponseEntity<Map<String, Integer>> like(@PathVariable("postId") int postId, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
@@ -123,6 +124,7 @@ public class ArticleController {
         return ResponseEntity.ok(result);
     }
 
+    @Transactional
     @PostMapping("/{postId}/dislike")
     public ResponseEntity<Map<String, Integer>> dislike(@PathVariable("postId") int postId, HttpServletRequest request) {
         //게시글 비추천
