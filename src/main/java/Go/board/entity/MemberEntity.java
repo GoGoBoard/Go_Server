@@ -5,8 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -24,19 +22,19 @@ public class MemberEntity {
     @Column
     private String nickname;
     //사용자:게시글 일대다
-    @OneToMany(
+   /* @OneToMany(
             mappedBy = "member",
             cascade = {CascadeType.PERSIST, CascadeType.REMOVE},//영속성 전이
             orphanRemoval = true
     )//다대일 단방향으로도 해보자
-    private List<ArticleEntity> articles = new ArrayList<>();
+    private List<ArticleEntity> articles = new ArrayList<>();*/
 
-    public void addArticle(ArticleEntity article) {
+   /* public void addArticle(ArticleEntity article) {
         this.articles.add(article);
         if (article.getMember() != this) {
             article.setMember(this);
         }
-    }
+    }*/
 
     public static MemberEntity toSaveMember(MemberDTO memberDTO) {
         MemberEntity memberEntity = new MemberEntity();

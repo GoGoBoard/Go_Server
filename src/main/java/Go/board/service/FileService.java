@@ -33,7 +33,7 @@ public class FileService {
         List<FileEntity> fileEntityList = new ArrayList<>();
         if (!CollectionUtils.isEmpty(fileList)) {//첨부파일 존재한다면
             //파일들을 저장할 경로 설정
-            // String path = "/home/~/Go_Server/image";
+            //  String path = "C://Users//오주은//Desktop//personal study//GoBoardUploadFiles";
             File file = new File(path);
             if (!file.exists()) {
                 boolean success = file.mkdirs();
@@ -113,8 +113,9 @@ public class FileService {
 
     public void saveFile(List<FileEntity> files, ArticleEntity articleEntity) {
         for (FileEntity file : files) {
+            fileRepository.save(file);
             file.setArticle(articleEntity);
-            articleEntity.addFile(fileRepository.save(file));
+
         }
     }
 
