@@ -110,7 +110,7 @@ public class ArticleController {
             dto.setRecommend(like);
         }
 
-        if (paging != null) {
+        if (paging.size() != 0) {
             Map<String, List<ArticlePagingDTO>> result = new HashMap<>();
             result.put("content", paging);
             return ResponseEntity.ok(result);
