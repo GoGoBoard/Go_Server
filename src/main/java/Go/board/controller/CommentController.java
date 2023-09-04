@@ -1,5 +1,6 @@
 package Go.board.controller;
 
+import Go.board.dto.CommentRequestDTO;
 import Go.board.dto.CommentResponseDTO;
 import Go.board.entity.CommentEntity;
 import Go.board.service.CommentService;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,12 +26,12 @@ public class CommentController {
     }
 
     @PostMapping("/{postId}")
-    public ResponseEntity<CommentResponseDTO> saveComment(@PathVariable int postId, @RequestBody Map<String,String> content, HttpServletRequest request) {
+    public ResponseEntity<CommentResponseDTO> saveComment(@PathVariable int postId, @RequestBody CommentRequestDTO commentRequest, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         int memberId = (int) session.getAttribute("memberId");//댓글 작성자
-        String comment =content.get("content");
+        String comment = commentRequest.getContent();
         CommentResponseDTO dto = commentService.saveComment(comment, postId, memberId);
-        return dto!=null ? ResponseEntity.ok(dto) : ResponseEntity.badRequest().build();
+        return dto != null ? ResponseEntity.ok(dto) : ResponseEntity.badRequest().build();
     }
 
     @Transactional // 따로 save하지 않아도 db수정됨(더티체킹)
