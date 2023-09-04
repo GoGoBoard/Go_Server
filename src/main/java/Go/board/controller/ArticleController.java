@@ -46,7 +46,7 @@ public class ArticleController {
             int memberId = (int) session.getAttribute("memberId");
             ArticleSaveDTO article = new ArticleSaveDTO(title, content, files);
             articleService.save(article, memberId);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok("{}");
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
@@ -82,7 +82,7 @@ public class ArticleController {
             ArticleEntity update = articleService.update(postId, articleSaveDTO);
             //파일 수정
             fileService.updateFile(update, articleSaveDTO.getFiles());
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok("{}");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -98,7 +98,7 @@ public class ArticleController {
         if (!checkOwner) return ResponseEntity.status(401).build();//작성자 이외의 사람이 지울려하는 경우
 
         boolean deleted = articleService.delete(postId, memberId);
-        return deleted ? ResponseEntity.ok().build() : ResponseEntity.badRequest().build();//400
+        return deleted ? ResponseEntity.ok("{}") : ResponseEntity.badRequest().build();//400
     }
 
     @GetMapping("/paging")//article/paging?page=1
