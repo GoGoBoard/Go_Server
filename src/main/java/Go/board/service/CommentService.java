@@ -33,7 +33,6 @@ public class CommentService {
 
         return CommentResponseDTO.toCommentResponseDTO(commentEntity);
     }
-
     public CommentResponseDTO updateComment(CommentEntity comment, String content) {
         comment.setContent(content);
 

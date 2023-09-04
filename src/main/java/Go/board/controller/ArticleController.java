@@ -105,6 +105,11 @@ public class ArticleController {
     @GetMapping("/paging")//article/paging?page=1
     public ResponseEntity<Map<String, List<ArticlePagingDTO>>> paging(@PageableDefault(page = 1) Pageable pageable) {
         List<ArticlePagingDTO> paging = articleService.paging(pageable);
+        for (ArticlePagingDTO dto : paging) {
+            int like = recommendService.getLike(dto.getPostId());
+            dto.setRecommend(like);
+        }
+
         if (paging != null) {
             Map<String, List<ArticlePagingDTO>> result = new HashMap<>();
             result.put("content", paging);

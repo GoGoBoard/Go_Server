@@ -14,15 +14,15 @@ public class ArticlePagingDTO {
     private String nickname;
     private long writeTime;
     private int recommend;//추천 수
-    private long localDateTime;
 
 
     public static ArticlePagingDTO toarticlePagingDTO(ArticleEntity articleEntity) {
         ArticlePagingDTO articlePagingDTO = new ArticlePagingDTO();
         articlePagingDTO.postId = articleEntity.getPostId();
         articlePagingDTO.title = articleEntity.getTitle();
-        articlePagingDTO.localDateTime = articleEntity.getWriteTime();
+        articlePagingDTO.writeTime = articleEntity.getWriteTime();
         articlePagingDTO.nickname = articleEntity.getMember().getNickname();
+
         return articlePagingDTO;
     }
 }

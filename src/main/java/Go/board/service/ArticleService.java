@@ -28,6 +28,7 @@ import java.util.Optional;
 public class ArticleService {
     private final MemberService memberService;
     private final FileService fileService;
+
     private final ArticleRepository articleRepository;
     private final CommentRepository commentRepository;
 
@@ -90,6 +91,7 @@ public class ArticleService {
         List<ArticlePagingDTO> dto = new ArrayList<>();
         for (ArticleEntity articleEntity : articleEntities) {
             dto.add(ArticlePagingDTO.toarticlePagingDTO(articleEntity));
+
         }
         return dto;
     }
