@@ -46,10 +46,10 @@ public class ArticleController {
             int memberId = (int) session.getAttribute("memberId");
             ArticleSaveDTO article = new ArticleSaveDTO(title, content, files);
             articleService.save(article, memberId);
-            return ResponseEntity.ok("저장 성공");
+            return ResponseEntity.ok().build();
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.ok().build();
+            return ResponseEntity.badRequest().build();
         }
     }
     @GetMapping("/{postId}")
