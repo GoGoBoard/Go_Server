@@ -3,14 +3,12 @@ package Go.board.service;
 import Go.board.entity.ArticleEntity;
 import Go.board.entity.FileEntity;
 import Go.board.repository.FileRepository;
-import com.jcraft.jsch.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,17 +21,17 @@ public class FileService {
     //파일서비스에서는 받아온 파일의 확장자를 확인하고
     //로컬에 실제 파일 저장
     //db에 저장할 이름을 만들고  파일 엔티티 리스트를 반환한다
-    public List<FileEntity> handleFile(List<MultipartFile> fileList) {
-        String path = "/home/~/Go_Server/image";
+    public List<FileEntity> handleFile(List<MultipartFile> fileList) throws IOException {
+       /* String path = "/home/~/Go_Server/image";
         String privateKeyFilePath = "C://Users//오주은//Downloads//gogoboard_key (1).pem";
         String username = "ubuntu"; // Replace with your Ubuntu server username
         String host = "52.79.65.54"; // Replace with your Ubuntu server IP or hostname
-        //서버실행할 때 환경변수 전해주는 식으로 -? 민감한 정보, 서버 재컴파일할 필요 사라짐
+        서버실행할 때 환경변수 전해주는 식으로 -? 민감한 정보, 서버 재컴파일할 필요 사라짐*/
 
         List<FileEntity> fileEntityList = new ArrayList<>();
         if (!CollectionUtils.isEmpty(fileList)) {//첨부파일 존재한다면
             //파일들을 저장할 경로 설정
-            //  String path = "C://Users//오주은//Desktop//personal study//GoBoardUploadFiles";
+            String path = "C://Users//오주은//Desktop//personal study//GoBoardUploadFiles";
             File file = new File(path);
             if (!file.exists()) {
                 boolean success = file.mkdirs();
@@ -67,7 +65,7 @@ public class FileService {
                 fileEntityList.add(fileEntity);
                 file = new File(path + File.separator + newFileName);
 
-                try {
+                /*try {
                     JSch jsch = new JSch();
                     Session session = jsch.getSession(username, host);
                     session.setConfig("StrictHostKeyChecking", "no");
@@ -87,8 +85,8 @@ public class FileService {
                     session.disconnect();
                 } catch (JSchException | SftpException | IOException e) {
                     e.printStackTrace();
-                }
-                //f.transferTo(file);//로컬에 저장
+                }*/
+                f.transferTo(file);//로컬에 저장
                 file.setWritable(true);
                 file.setReadable(true);
             }
@@ -119,7 +117,7 @@ public class FileService {
         }
     }
 
-    public void updateFile(ArticleEntity article, List<MultipartFile> files) {
+    public void updateFile(ArticleEntity article, List<MultipartFile> files) throws IOException {
         //삭제하고 새로 다시 넣자?
         fileRepository.deleteAllByArticle(article);
         List<FileEntity> fileEntityList = handleFile(files);
