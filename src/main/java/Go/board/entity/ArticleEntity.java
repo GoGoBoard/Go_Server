@@ -17,33 +17,9 @@ public class ArticleEntity extends TimeEntity {
     private int postId;
     private String title;
     private String content;
-    //게시글:사용자 다대일
     @ManyToOne
     @JoinColumn(name = "member_id")
     private MemberEntity member;
-    //게시글:첨부파일 일대다
-   /* @OneToMany(
-            mappedBy = "article",
-            cascade = {CascadeType.MERGE, CascadeType.REMOVE},//영속성 전이
-            fetch = FetchType.LAZY,
-            orphanRemoval = true
-    )
-    private List<FileEntity> files = new ArrayList<>();*/
-
-    //article에서 파일 처리
-/*    public void addFile(FileEntity fileEntity) {
-        this.files.add(fileEntity);
-        if (fileEntity.getArticle() != this)
-            fileEntity.setArticle(this);
-    }*/
-
-    /*public void setMember(MemberEntity member) {
-        this.member = member;
-        if (!member.getArticles().contains(this)) {
-            member.getArticles().add(this);
-        }
-    }*/
-
     public static ArticleEntity toArticleEntity(ArticleRequestDTO articleRequestDTO) {
         ArticleEntity articleEntity = new ArticleEntity();
         articleEntity.setTitle(articleRequestDTO.getTitle());

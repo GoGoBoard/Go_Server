@@ -29,14 +29,6 @@ public class FileEntity {
         this.fileName = fileName;
     }
 
-    //Article정보 저장
-/*    public void setArticle(ArticleEntity articleEntity) {
-        this.article = articleEntity;
-        //게시글에 현재 파일이 존재하지 않으면 파일 추가
-        if (!articleEntity.getFiles().contains(this))
-            articleEntity.getFiles().add(this);
-    }*/
-
     @Override
     public String toString() {
         return "FileEntity{" +

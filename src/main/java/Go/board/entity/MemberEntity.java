@@ -20,20 +20,6 @@ public class MemberEntity {
     private String password;
     @Column
     private String nickname;
-    //사용자:게시글 일대다
-   /* @OneToMany(
-            mappedBy = "member",
-            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},//영속성 전이
-            orphanRemoval = true
-    )//다대일 단방향으로도 해보자
-    private List<ArticleEntity> articles = new ArrayList<>();*/
-
-   /* public void addArticle(ArticleEntity article) {
-        this.articles.add(article);
-        if (article.getMember() != this) {
-            article.setMember(this);
-        }
-    }*/
     @Override
     public String toString() {
         return "MemberEntity{" +
